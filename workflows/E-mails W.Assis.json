@@ -1,0 +1,445 @@
+{
+  "active": false,
+  "activeVersion": null,
+  "activeVersionId": null,
+  "connections": {
+    "Microsoft Outlook Trigger": {
+      "main": [
+        [
+          {
+            "node": "Limpeza Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Text Classifier",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limpeza Email": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Information Extractor",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Information Extractor": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Text Classifier",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2026-04-01T19:05:55.905Z",
+  "id": "G6wEIRcS0MmGz7Fd",
+  "isArchived": true,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "E-mails W.Assis",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyHour"
+            }
+          ]
+        },
+        "output": "raw",
+        "filters": {},
+        "options": {}
+      },
+      "type": "n8n-nodes-base.microsoftOutlookTrigger",
+      "typeVersion": 1,
+      "position": [
+        144,
+        -112
+      ],
+      "id": "c5ca19ab-9d57-4411-9640-55893aafad20",
+      "name": "Microsoft Outlook Trigger",
+      "credentials": {
+        "microsoftOutlookOAuth2Api": {
+          "id": "T7yJ4aztxqXeJPIh",
+          "name": "Microsoft Outlook account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "inputText": "={{ $json.output[0].content[0].text }}",
+        "categories": {
+          "categories": [
+            {
+              "category": "Pendencias de emissão",
+              "description": "Emails sobre exigências, bloqueios ou pendências que impedem a emissão, alteração, renovação, cancelamento ou conclusão de um processo de seguro. Inclui falta de documentos, assinatura pendente, correção de dados, inconsistências cadastrais, exigências da seguradora e complementação de informações."
+            },
+            {
+              "category": "Movimentações de apólice",
+              "description": "Emails sobre processos concluídos ou em andamento que geram emissão ou alteração de documentos do seguro. Inclui emissão concluída, endosso, alteração de apólice, cancelamento, proposta emitida, apólice emitida, certificado, documento gerado e outras movimentações operacionais da apólice."
+            },
+            {
+              "category": "Vistoria de emissão",
+              "description": "Emails sobre vistoria prévia, inspeção de risco ou análise técnica relacionadas à emissão, aceitação, renovação ou alteração da apólice. Inclui agendamento, pendência, realização, laudo e aprovação de vistoria quando o objetivo principal for seguir com a emissão ou manutenção do seguro."
+            },
+            {
+              "category": "Renovação",
+              "description": "Emails relacionados à renovação de seguros, aviso de vencimento, proposta renovatória, negociação de continuidade, atualização de dados para renovação e tratativas comerciais ou operacionais da renovação. Mesmo que exista recusa ou dificuldade, classifique aqui quando o assunto principal for renovação."
+            },
+            {
+              "category": "Nova cotação",
+              "description": "Emails com solicitação de cotação para seguro novo, individual ou empresarial. Inclui pedidos de orçamento, comparação entre seguradoras, envio de dados para cotação e início de negociação de seguro novo."
+            },
+            {
+              "category": "Sinistro",
+              "description": "Emails relacionados a sinistro e atendimento vinculado ao sinistro. Inclui abertura, andamento, documentação, indenização, terceiro, oficina, assistência, dúvidas do segurado, comunicações jurídicas e vistorias ou perícias relacionadas ao evento."
+            },
+            {
+              "category": "Financeiro",
+              "description": "Emails sobre boletos, parcelas, cobrança, inadimplência, segunda via, faturamento, baixa de pagamento, repasse, estorno e demais assuntos financeiros da operação."
+            },
+            {
+              "category": "Comissão",
+              "description": "Emails sobre comissão de corretagem, extratos, relatórios analíticos, demonstrativos, conferência de valores, divergências e pagamento de comissão por seguradoras ou parceiros."
+            },
+            {
+              "category": "Comunicados / parceiros / marketing",
+              "description": "Emails de seguradoras, assessorias, parceiros ou fornecedores com comunicados, campanhas, novidades, alterações de produto, materiais promocionais, newsletters e conteúdos institucionais que não representam atendimento operacional direto ao cliente."
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.textClassifier",
+      "typeVersion": 1.1,
+      "position": [
+        1552,
+        -480
+      ],
+      "id": "f53dd75d-033e-4db7-8ee6-7b675af460a9",
+      "name": "Text Classifier"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-5.4-nano",
+          "mode": "list",
+          "cachedResultName": "gpt-5.4-nano"
+        },
+        "builtInTools": {},
+        "options": {
+          "textFormat": {
+            "textOptions": {
+              "type": "json_schema"
+            }
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        1552,
+        -64
+      ],
+      "id": "f1e27c46-4565-4aa2-8006-7d542b6caf44",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "3nNzkjx6WvZeCeUg",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-5.4-nano",
+          "mode": "list",
+          "cachedResultName": "GPT-5.4-NANO"
+        },
+        "responses": {
+          "values": [
+            {
+              "content": "=Aqui está o email recebido:  {{ $json.body.content }}"
+            },
+            {
+              "role": "system",
+              "content": "Pegue o email recebido e faça uma limpeza, para que fique mais fácil sua leitura. Por exemplo, retirar os tags de HTML, mas não altere o conteúdo desse email. Não é necessário você incluir o assunto do email. Entregue a resposta em json sem array"
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.1,
+      "position": [
+        368,
+        -64
+      ],
+      "id": "21836acb-e80a-4af2-bb73-e0f882a36a07",
+      "name": "Limpeza Email",
+      "credentials": {
+        "openAiApi": {
+          "id": "3nNzkjx6WvZeCeUg",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "text": "={{ $json.output[0].content[0].text }}",
+        "attributes": {
+          "attributes": [
+            {
+              "name": "Pendências de emissão",
+              "description": "Emails sobre exigências, bloqueios ou pendências que impedem a emissão, alteração, renovação, cancelamento ou conclusão de um processo de seguro. Inclui falta de documentos, assinatura pendente, correção de dados, inconsistências cadastrais, exigências da seguradora e complementação de informações."
+            },
+            {
+              "name": "Movimentações de apólice",
+              "description": "Emails sobre processos concluídos ou em andamento que geram emissão ou alteração de documentos do seguro. Inclui emissão concluída, endosso, alteração de apólice, cancelamento, proposta emitida, apólice emitida, certificado, documento gerado e outras movimentações operacionais da apólice."
+            },
+            {
+              "name": "Vistoria de emissão",
+              "description": "Emails sobre vistoria prévia, inspeção de risco ou análise técnica relacionadas à emissão, aceitação, renovação ou alteração da apólice. Inclui agendamento, pendência, realização, laudo e aprovação de vistoria quando o objetivo principal for seguir com a emissão ou manutenção do seguro."
+            },
+            {
+              "name": "Renovação",
+              "description": "Emails relacionados à renovação de seguros, aviso de vencimento, proposta renovatória, negociação de continuidade, atualização de dados para renovação e tratativas comerciais ou operacionais da renovação. Mesmo que exista recusa ou dificuldade, classifique aqui quando o assunto principal for renovação."
+            },
+            {
+              "name": "Nova cotação",
+              "description": "Emails com solicitação de cotação para seguro novo, individual ou empresarial. Inclui pedidos de orçamento, comparação entre seguradoras, envio de dados para cotação e início de negociação de seguro novo."
+            },
+            {
+              "name": "Sinistro",
+              "description": "Emails relacionados a sinistro e atendimento vinculado ao sinistro. Inclui abertura, andamento, documentação, indenização, terceiro, oficina, assistência, dúvidas do segurado, comunicações jurídicas e vistorias ou perícias relacionadas ao evento."
+            },
+            {
+              "name": "Financeiro",
+              "description": "Emails sobre boletos, parcelas, cobrança, inadimplência, segunda via, faturamento, baixa de pagamento, repasse, estorno e demais assuntos financeiros da operação."
+            },
+            {
+              "name": "Comissão",
+              "description": "Emails sobre comissão de corretagem, extratos, relatórios analíticos, demonstrativos, conferência de valores, divergências e pagamento de comissão por seguradoras ou parceiros."
+            },
+            {
+              "name": "Comunicados / parceiros / marketing",
+              "description": "Emails de seguradoras, assessorias, parceiros ou fornecedores com comunicados, campanhas, novidades, alterações de produto, materiais promocionais, newsletters e conteúdos institucionais que não representam atendimento operacional direto ao cliente."
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.informationExtractor",
+      "typeVersion": 1.2,
+      "position": [
+        640,
+        -400
+      ],
+      "id": "636a6188-f798-4ce7-bf3c-a149c74ac310",
+      "name": "Information Extractor"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-5.4-nano",
+          "mode": "list",
+          "cachedResultName": "gpt-5.4-nano"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        624,
+        -224
+      ],
+      "id": "804e248c-c54e-41a4-9a16-a0a52860f8bd",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "3nNzkjx6WvZeCeUg",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "f825438d-1c66-4ae3-8d1c-dc8e5a7573be",
+                    "leftValue": "",
+                    "rightValue": "Pendência de emissão",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "4d5bfb26-ee82-41ee-a051-eacc3520cde8",
+                    "leftValue": "={{ $json.output['Movimentações de apólice'] }}",
+                    "rightValue": "Movimentação de apólice",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "0657ecab-a32e-44b3-8e6c-469307be944f",
+                    "leftValue": "={{ $json.output['Comunicados / parceiros / marketing'] }}",
+                    "rightValue": "Comunicados / parceiros / marketing",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        960,
+        -416
+      ],
+      "id": "67d5fe41-ece6-4806-a8bf-591a294c71eb",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "7b839660-2a55-4f37-861e-0d0cd6c3e5e0",
+              "name": "Texto",
+              "value": "={{ $json.output[0].content[0].text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        832,
+        -224
+      ],
+      "id": "e60aa7a1-43db-40b5-97bd-8c6b8ac7d563",
+      "name": "Edit Fields"
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "timeSavedMode": "fixed",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "shared": [
+    {
+      "updatedAt": "2026-04-01T19:05:55.905Z",
+      "createdAt": "2026-04-01T19:05:55.905Z",
+      "role": "workflow:owner",
+      "workflowId": "G6wEIRcS0MmGz7Fd",
+      "projectId": "OI72yru3WBGIgT4P"
+    }
+  ],
+  "staticData": {
+    "node:Microsoft Outlook Trigger": {
+      "lastTimeChecked": "2026-04-02T13:00:31.004-03:00"
+    }
+  },
+  "tags": [],
+  "triggerCount": 1,
+  "updatedAt": "2026-04-07T12:57:26.869Z",
+  "versionId": "18c37e13-9190-44d5-be4c-43c4f0adef1c"
+}
