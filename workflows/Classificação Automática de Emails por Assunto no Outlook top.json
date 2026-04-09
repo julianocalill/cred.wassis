@@ -1,0 +1,1568 @@
+{
+  "active": true,
+  "activeVersion": {
+    "updatedAt": "2026-04-02T16:50:07.324Z",
+    "createdAt": "2026-04-02T16:50:03.947Z",
+    "versionId": "f3b42a39-a91a-4d80-b8c5-38cbd1b7f0c4",
+    "workflowId": "2u9Bl6jmYqNa93xr",
+    "nodes": [
+      {
+        "parameters": {
+          "pollTimes": {
+            "item": [
+              {
+                "mode": "everyHour"
+              }
+            ]
+          },
+          "filters": {},
+          "options": {}
+        },
+        "id": "fd10f994-094a-4686-8b2d-b8c1fbc54171",
+        "name": "Emails da Caixa Compartilhada",
+        "type": "n8n-nodes-base.microsoftOutlookTrigger",
+        "typeVersion": 1,
+        "position": [
+          -2112,
+          1504
+        ],
+        "credentials": {
+          "microsoftOutlookOAuth2Api": {
+            "id": "T7yJ4aztxqXeJPIh",
+            "name": "Microsoft Outlook account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "id-1",
+                "name": "assunto",
+                "value": "={{ $json.subject }}",
+                "type": "string"
+              },
+              {
+                "id": "id-2",
+                "name": "corpo",
+                "value": "={{ $json.bodyPreview }}",
+                "type": "string"
+              },
+              {
+                "id": "id-3",
+                "name": "remetente",
+                "value": "={{ $json.from }}",
+                "type": "string"
+              },
+              {
+                "id": "id-4",
+                "name": "data",
+                "value": "={{ $json.receivedDateTime }}",
+                "type": "string"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "id": "b275806c-94be-44e3-a914-0071bf90fce6",
+        "name": "Preparar Dados do Email",
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          -1888,
+          1504
+        ]
+      },
+      {
+        "parameters": {
+          "promptType": "define",
+          "text": "={{ $json.assunto + ' - ' + $json.corpo }}",
+          "hasOutputParser": true,
+          "options": {
+            "systemMessage": "Classifique o email em 1 única categoria, escolhendo exatamente uma destas opções:\n\nPendências de emissão\nMovimentações de apólice\nVistoria de emissão\nRenovação\nNova cotação\nSinistro\nFinanceiro\nComissão\nComunicados / parceiros / marketing\n\nRegras rápidas:\n\nFalta de documento, exigência, bloqueio, correção ou pendência para seguir: Pendências de emissão\nEmissão concluída, endosso, cancelamento, certificado, apólice ou documento gerado: Movimentações de apólice\nVistoria prévia ou inspeção para emissão, aceitação, renovação ou alteração: Vistoria de emissão\nVencimento, continuidade ou proposta renovatória: Renovação\nPedido de orçamento ou seguro novo: Nova cotação\nAcidente, roubo, furto, danos, indenização, terceiro, oficina, assistência, perícia ou jurídico ligado ao evento: Sinistro\nBoleto, parcela, cobrança, pagamento, repasse, estorno ou inadimplência: Financeiro\nExtrato, relatório, divergência ou pagamento de comissão: Comissão\nComunicados, campanhas, newsletters, novidades de seguradoras e parceiros sem ação operacional direta: Comunicados / parceiros / marketing\n\nRetorne a categoria escolhida, nível de confiança (0-1) e justificativa da classificação."
+          }
+        },
+        "id": "dcb69f2b-ecfc-4c6d-affc-ed1111309b23",
+        "name": "Classificar Email por IA",
+        "type": "@n8n/n8n-nodes-langchain.agent",
+        "typeVersion": 3.1,
+        "position": [
+          -1664,
+          1504
+        ]
+      },
+      {
+        "parameters": {
+          "model": {
+            "__rl": true,
+            "mode": "id",
+            "value": "gpt-4o-mini"
+          },
+          "builtInTools": {},
+          "options": {
+            "temperature": 0.1
+          }
+        },
+        "id": "e2955975-5d24-4049-991b-b2afb351159f",
+        "name": "Modelo OpenAI",
+        "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "typeVersion": 1.3,
+        "position": [
+          -1592,
+          1936
+        ],
+        "credentials": {
+          "openAiApi": {
+            "id": "3nNzkjx6WvZeCeUg",
+            "name": "OpenAi account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "schemaType": "manual",
+          "inputSchema": "{\n\t\"type\": \"object\",\n\t\"properties\": {\n\t\t\"categoria\": {\n\t\t\t\"type\": \"string\",\n\t\t\t\"enum\": [\"Pendências de emissão\", \"Movimentações de apólice\", \"Vistoria de emissão\", \"Renovação\", \"Nova cotação\", \"Sinistro\", \"Financeiro\", \"Comissão\", \"Comunicados / parceiros / marketing\"]\n\t\t},\n\t\t\"confianca\": {\n\t\t\t\"type\": \"number\",\n\t\t\t\"minimum\": 0,\n\t\t\t\"maximum\": 1\n\t\t},\n\t\t\"justificativa\": {\n\t\t\t\"type\": \"string\"\n\t\t}\n\t}\n}",
+          "autoFix": true
+        },
+        "id": "e2287c73-3bef-4075-804e-6004c4947066",
+        "name": "Formato de Saída Estruturado",
+        "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+        "typeVersion": 1.3,
+        "position": [
+          -1588,
+          1728
+        ]
+      },
+      {
+        "parameters": {
+          "rules": {
+            "values": [
+              {
+                "conditions": {
+                  "options": {
+                    "caseSensitive": true,
+                    "leftValue": "",
+                    "typeValidation": "strict",
+                    "version": 3
+                  },
+                  "conditions": [
+                    {
+                      "leftValue": "={{ $json.output.categoria }}",
+                      "rightValue": "Pendências de emissão",
+                      "operator": {
+                        "type": "string",
+                        "operation": "equals"
+                      },
+                      "id": "id-1"
+                    }
+                  ],
+                  "combinator": "and"
+                },
+                "renameOutput": true,
+                "outputKey": "Pendências de emissão"
+              },
+              {
+                "conditions": {
+                  "options": {
+                    "caseSensitive": true,
+                    "leftValue": "",
+                    "typeValidation": "strict",
+                    "version": 3
+                  },
+                  "conditions": [
+                    {
+                      "leftValue": "={{ $json.output.categoria }}",
+                      "rightValue": "Movimentações de apólice",
+                      "operator": {
+                        "type": "string",
+                        "operation": "equals"
+                      },
+                      "id": "id-2"
+                    }
+                  ],
+                  "combinator": "and"
+                },
+                "renameOutput": true,
+                "outputKey": "Movimentações de apólice"
+              },
+              {
+                "conditions": {
+                  "options": {
+                    "caseSensitive": true,
+                    "leftValue": "",
+                    "typeValidation": "strict",
+                    "version": 3
+                  },
+                  "conditions": [
+                    {
+                      "leftValue": "={{ $json.output.categoria }}",
+                      "rightValue": "Vistoria de emissão",
+                      "operator": {
+                        "type": "string",
+                        "operation": "equals"
+                      },
+                      "id": "id-3"
+                    }
+                  ],
+                  "combinator": "and"
+                },
+                "renameOutput": true,
+                "outputKey": "Vistoria de emissão"
+              },
+              {
+                "conditions": {
+                  "options": {
+                    "caseSensitive": true,
+                    "leftValue": "",
+                    "typeValidation": "strict",
+                    "version": 3
+                  },
+                  "conditions": [
+                    {
+                      "leftValue": "={{ $json.output.categoria }}",
+                      "rightValue": "Renovação",
+                      "operator": {
+                        "type": "string",
+                        "operation": "equals"
+                      },
+                      "id": "id-4"
+                    }
+                  ],
+                  "combinator": "and"
+                },
+                "renameOutput": true,
+                "outputKey": "Renovação"
+              },
+              {
+                "conditions": {
+                  "options": {
+                    "caseSensitive": true,
+                    "leftValue": "",
+                    "typeValidation": "strict",
+                    "version": 3
+                  },
+                  "conditions": [
+                    {
+                      "leftValue": "={{ $json.output.categoria }}",
+                      "rightValue": "Nova cotação",
+                      "operator": {
+                        "type": "string",
+                        "operation": "equals"
+                      },
+                      "id": "id-5"
+                    }
+                  ],
+                  "combinator": "and"
+                },
+                "renameOutput": true,
+                "outputKey": "Nova cotação"
+              },
+              {
+                "conditions": {
+                  "options": {
+                    "caseSensitive": true,
+                    "leftValue": "",
+                    "typeValidation": "strict",
+                    "version": 3
+                  },
+                  "conditions": [
+                    {
+                      "leftValue": "={{ $json.output.categoria }}",
+                      "rightValue": "Sinistro",
+                      "operator": {
+                        "type": "string",
+                        "operation": "equals"
+                      },
+                      "id": "id-6"
+                    }
+                  ],
+                  "combinator": "and"
+                },
+                "renameOutput": true,
+                "outputKey": "Sinistro"
+              },
+              {
+                "conditions": {
+                  "options": {
+                    "caseSensitive": true,
+                    "leftValue": "",
+                    "typeValidation": "strict",
+                    "version": 3
+                  },
+                  "conditions": [
+                    {
+                      "leftValue": "={{ $json.output.categoria }}",
+                      "rightValue": "Financeiro",
+                      "operator": {
+                        "type": "string",
+                        "operation": "equals"
+                      },
+                      "id": "id-7"
+                    }
+                  ],
+                  "combinator": "and"
+                },
+                "renameOutput": true,
+                "outputKey": "Financeiro"
+              },
+              {
+                "conditions": {
+                  "options": {
+                    "caseSensitive": true,
+                    "leftValue": "",
+                    "typeValidation": "strict",
+                    "version": 3
+                  },
+                  "conditions": [
+                    {
+                      "leftValue": "={{ $json.output.categoria }}",
+                      "rightValue": "Comissão",
+                      "operator": {
+                        "type": "string",
+                        "operation": "equals"
+                      },
+                      "id": "id-8"
+                    }
+                  ],
+                  "combinator": "and"
+                },
+                "renameOutput": true,
+                "outputKey": "Comissão"
+              },
+              {
+                "conditions": {
+                  "options": {
+                    "caseSensitive": true,
+                    "leftValue": "",
+                    "typeValidation": "strict",
+                    "version": 3
+                  },
+                  "conditions": [
+                    {
+                      "leftValue": "={{ $json.output.categoria }}",
+                      "rightValue": "Comunicados / parceiros / marketing",
+                      "operator": {
+                        "type": "string",
+                        "operation": "equals"
+                      },
+                      "id": "id-9"
+                    }
+                  ],
+                  "combinator": "and"
+                },
+                "renameOutput": true,
+                "outputKey": "Comunicados / parceiros / marketing"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "id": "e2af6d91-489f-488e-9c22-4ee5c4994375",
+        "name": "Rotear por Categoria",
+        "type": "n8n-nodes-base.switch",
+        "typeVersion": 3.4,
+        "position": [
+          -1220,
+          1392
+        ]
+      },
+      {
+        "parameters": {
+          "operation": "update",
+          "messageId": {
+            "__rl": true,
+            "mode": "id",
+            "value": "={{ $('Emails da Caixa Compartilhada').item.json.id }}"
+          },
+          "updateFields": {
+            "categories": [
+              "Sinistro"
+            ]
+          }
+        },
+        "id": "4c6a10ef-070d-46bf-a898-0ba83d570e74",
+        "name": "Marcar como Sinistro",
+        "type": "n8n-nodes-base.microsoftOutlook",
+        "typeVersion": 2,
+        "position": [
+          -996,
+          1696
+        ],
+        "webhookId": "74d99e6f-1cb2-44d3-a66d-154aa45adf90",
+        "credentials": {
+          "microsoftOutlookOAuth2Api": {
+            "id": "T7yJ4aztxqXeJPIh",
+            "name": "Microsoft Outlook account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "operation": "update",
+          "messageId": {
+            "__rl": true,
+            "mode": "id",
+            "value": "={{ $('Emails da Caixa Compartilhada').item.json.id }}"
+          },
+          "updateFields": {
+            "categories": [
+              "Pendências de emissão"
+            ]
+          }
+        },
+        "id": "757d363a-e897-4bce-b486-84161da246bb",
+        "name": "Marcar como Emissão",
+        "type": "n8n-nodes-base.microsoftOutlook",
+        "typeVersion": 2,
+        "position": [
+          -996,
+          736
+        ],
+        "webhookId": "30fc37f8-0c60-424e-b3d1-1df834a61873",
+        "credentials": {
+          "microsoftOutlookOAuth2Api": {
+            "id": "T7yJ4aztxqXeJPIh",
+            "name": "Microsoft Outlook account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "operation": "update",
+          "messageId": {
+            "__rl": true,
+            "mode": "id",
+            "value": "={{ $('Emails da Caixa Compartilhada').item.json.id }}"
+          },
+          "updateFields": {
+            "categories": [
+              "Movimentações de apólice"
+            ]
+          }
+        },
+        "id": "aa138928-0f75-4c4c-bc48-d5212021bdc9",
+        "name": "Marcar como Financeiro",
+        "type": "n8n-nodes-base.microsoftOutlook",
+        "typeVersion": 2,
+        "position": [
+          -996,
+          928
+        ],
+        "webhookId": "d9860623-5ea0-48f2-ac3b-92d2a2dff04b",
+        "credentials": {
+          "microsoftOutlookOAuth2Api": {
+            "id": "T7yJ4aztxqXeJPIh",
+            "name": "Microsoft Outlook account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "operation": "update",
+          "messageId": {
+            "__rl": true,
+            "mode": "id",
+            "value": "={{ $('Emails da Caixa Compartilhada').item.json.id }}"
+          },
+          "updateFields": {
+            "categories": [
+              "Vistoria de emissão"
+            ]
+          }
+        },
+        "id": "50100ce5-3652-474c-b4f5-253e06df3e93",
+        "name": "Marcar como Vistoria de emissão",
+        "type": "n8n-nodes-base.microsoftOutlook",
+        "typeVersion": 2,
+        "position": [
+          -996,
+          1120
+        ],
+        "webhookId": "a74b650c-4df5-4650-87dd-b588d1c26f76",
+        "credentials": {
+          "microsoftOutlookOAuth2Api": {
+            "id": "T7yJ4aztxqXeJPIh",
+            "name": "Microsoft Outlook account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "operation": "update",
+          "messageId": {
+            "__rl": true,
+            "mode": "id",
+            "value": "={{ $('Emails da Caixa Compartilhada').item.json.id }}"
+          },
+          "updateFields": {
+            "categories": [
+              "Renovação"
+            ]
+          }
+        },
+        "id": "f1b0ae77-2bd8-4aa7-94f5-5354ffeee990",
+        "name": "Marcar como Renovação",
+        "type": "n8n-nodes-base.microsoftOutlook",
+        "typeVersion": 2,
+        "position": [
+          -996,
+          1312
+        ],
+        "webhookId": "de6c5fa2-7ded-4d7f-b7d1-c29da0ac89d0",
+        "credentials": {
+          "microsoftOutlookOAuth2Api": {
+            "id": "T7yJ4aztxqXeJPIh",
+            "name": "Microsoft Outlook account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "operation": "update",
+          "messageId": {
+            "__rl": true,
+            "mode": "id",
+            "value": "={{ $('Emails da Caixa Compartilhada').item.json.id }}"
+          },
+          "updateFields": {
+            "categories": [
+              "Nova cotação"
+            ]
+          }
+        },
+        "id": "c5887b82-fb91-4966-9dc3-269847647437",
+        "name": "Marcar como Nova cotação",
+        "type": "n8n-nodes-base.microsoftOutlook",
+        "typeVersion": 2,
+        "position": [
+          -996,
+          1504
+        ],
+        "webhookId": "c94495f3-8c59-4e63-9364-3d61e7acaa2b",
+        "credentials": {
+          "microsoftOutlookOAuth2Api": {
+            "id": "T7yJ4aztxqXeJPIh",
+            "name": "Microsoft Outlook account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "operation": "update",
+          "messageId": {
+            "__rl": true,
+            "mode": "id",
+            "value": "={{ $('Emails da Caixa Compartilhada').item.json.id }}"
+          },
+          "updateFields": {
+            "categories": [
+              "Financeiro"
+            ]
+          }
+        },
+        "id": "005950f0-fc32-400b-9614-fa4d302ed266",
+        "name": "Marcar como Financeiro1",
+        "type": "n8n-nodes-base.microsoftOutlook",
+        "typeVersion": 2,
+        "position": [
+          -996,
+          1888
+        ],
+        "webhookId": "7f6e6b39-74f3-4f15-8ae0-60067819a806",
+        "credentials": {
+          "microsoftOutlookOAuth2Api": {
+            "id": "T7yJ4aztxqXeJPIh",
+            "name": "Microsoft Outlook account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "operation": "update",
+          "messageId": {
+            "__rl": true,
+            "mode": "id",
+            "value": "={{ $('Emails da Caixa Compartilhada').item.json.id }}"
+          },
+          "updateFields": {
+            "categories": [
+              "Comissão"
+            ]
+          }
+        },
+        "id": "4d29f2f8-2c78-41e6-a83c-f81c98799dec",
+        "name": "Marcar como Comissão",
+        "type": "n8n-nodes-base.microsoftOutlook",
+        "typeVersion": 2,
+        "position": [
+          -996,
+          2080
+        ],
+        "webhookId": "8bf07696-44be-4ab6-95c8-34d916159004",
+        "credentials": {
+          "microsoftOutlookOAuth2Api": {
+            "id": "T7yJ4aztxqXeJPIh",
+            "name": "Microsoft Outlook account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "operation": "update",
+          "messageId": {
+            "__rl": true,
+            "mode": "id",
+            "value": "={{ $('Emails da Caixa Compartilhada').item.json.id }}"
+          },
+          "updateFields": {
+            "categories": [
+              "Comunicados / parceiros / marketing"
+            ]
+          }
+        },
+        "id": "31d77f89-bd43-49d5-886d-9a881575c9fd",
+        "name": "Marcar como Comunicados",
+        "type": "n8n-nodes-base.microsoftOutlook",
+        "typeVersion": 2,
+        "position": [
+          -996,
+          2272
+        ],
+        "webhookId": "2dd66cbd-64aa-40df-9b22-7e6d60fe479a",
+        "credentials": {
+          "microsoftOutlookOAuth2Api": {
+            "id": "T7yJ4aztxqXeJPIh",
+            "name": "Microsoft Outlook account"
+          }
+        }
+      }
+    ],
+    "connections": {
+      "Emails da Caixa Compartilhada": {
+        "main": [
+          [
+            {
+              "node": "Preparar Dados do Email",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Preparar Dados do Email": {
+        "main": [
+          [
+            {
+              "node": "Classificar Email por IA",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Modelo OpenAI": {
+        "ai_languageModel": [
+          [
+            {
+              "node": "Classificar Email por IA",
+              "type": "ai_languageModel",
+              "index": 0
+            },
+            {
+              "node": "Formato de Saída Estruturado",
+              "type": "ai_languageModel",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Formato de Saída Estruturado": {
+        "ai_outputParser": [
+          [
+            {
+              "node": "Classificar Email por IA",
+              "type": "ai_outputParser",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Classificar Email por IA": {
+        "main": [
+          [
+            {
+              "node": "Rotear por Categoria",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Rotear por Categoria": {
+        "main": [
+          [
+            {
+              "node": "Marcar como Emissão",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Marcar como Financeiro",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Marcar como Vistoria de emissão",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Marcar como Renovação",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Marcar como Nova cotação",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Marcar como Sinistro",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Marcar como Financeiro1",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Marcar como Comissão",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Marcar como Comunicados",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "authors": "Renato Martin de Assis",
+    "name": "Version f3b42a39",
+    "description": "",
+    "autosaved": true
+  },
+  "activeVersionId": "f3b42a39-a91a-4d80-b8c5-38cbd1b7f0c4",
+  "connections": {
+    "Emails da Caixa Compartilhada": {
+      "main": [
+        [
+          {
+            "node": "Preparar Dados do Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparar Dados do Email": {
+      "main": [
+        [
+          {
+            "node": "Classificar Email por IA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Modelo OpenAI": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Classificar Email por IA",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Formato de Saída Estruturado",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Formato de Saída Estruturado": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Classificar Email por IA",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Classificar Email por IA": {
+      "main": [
+        [
+          {
+            "node": "Rotear por Categoria",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Rotear por Categoria": {
+      "main": [
+        [
+          {
+            "node": "Marcar como Emissão",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Marcar como Financeiro",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Marcar como Vistoria de emissão",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Marcar como Renovação",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Marcar como Nova cotação",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Marcar como Sinistro",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Marcar como Financeiro1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Marcar como Comissão",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Marcar como Comunicados",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2026-04-02T16:33:40.478Z",
+  "id": "2u9Bl6jmYqNa93xr",
+  "isArchived": false,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "Classificação Automática de Emails por Assunto no Outlook top",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyHour"
+            }
+          ]
+        },
+        "filters": {},
+        "options": {}
+      },
+      "id": "fd10f994-094a-4686-8b2d-b8c1fbc54171",
+      "name": "Emails da Caixa Compartilhada",
+      "type": "n8n-nodes-base.microsoftOutlookTrigger",
+      "typeVersion": 1,
+      "position": [
+        -2112,
+        1504
+      ],
+      "credentials": {
+        "microsoftOutlookOAuth2Api": {
+          "id": "T7yJ4aztxqXeJPIh",
+          "name": "Microsoft Outlook account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "id-1",
+              "name": "assunto",
+              "value": "={{ $json.subject }}",
+              "type": "string"
+            },
+            {
+              "id": "id-2",
+              "name": "corpo",
+              "value": "={{ $json.bodyPreview }}",
+              "type": "string"
+            },
+            {
+              "id": "id-3",
+              "name": "remetente",
+              "value": "={{ $json.from }}",
+              "type": "string"
+            },
+            {
+              "id": "id-4",
+              "name": "data",
+              "value": "={{ $json.receivedDateTime }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "b275806c-94be-44e3-a914-0071bf90fce6",
+      "name": "Preparar Dados do Email",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1888,
+        1504
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.assunto + ' - ' + $json.corpo }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "Classifique o email em 1 única categoria, escolhendo exatamente uma destas opções:\n\nPendências de emissão\nMovimentações de apólice\nVistoria de emissão\nRenovação\nNova cotação\nSinistro\nFinanceiro\nComissão\nComunicados / parceiros / marketing\n\nRegras rápidas:\n\nFalta de documento, exigência, bloqueio, correção ou pendência para seguir: Pendências de emissão\nEmissão concluída, endosso, cancelamento, certificado, apólice ou documento gerado: Movimentações de apólice\nVistoria prévia ou inspeção para emissão, aceitação, renovação ou alteração: Vistoria de emissão\nVencimento, continuidade ou proposta renovatória: Renovação\nPedido de orçamento ou seguro novo: Nova cotação\nAcidente, roubo, furto, danos, indenização, terceiro, oficina, assistência, perícia ou jurídico ligado ao evento: Sinistro\nBoleto, parcela, cobrança, pagamento, repasse, estorno ou inadimplência: Financeiro\nExtrato, relatório, divergência ou pagamento de comissão: Comissão\nComunicados, campanhas, newsletters, novidades de seguradoras e parceiros sem ação operacional direta: Comunicados / parceiros / marketing\n\nRetorne a categoria escolhida, nível de confiança (0-1) e justificativa da classificação."
+        }
+      },
+      "id": "dcb69f2b-ecfc-4c6d-affc-ed1111309b23",
+      "name": "Classificar Email por IA",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -1664,
+        1504
+      ]
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "id",
+          "value": "gpt-4o-mini"
+        },
+        "builtInTools": {},
+        "options": {
+          "temperature": 0.1
+        }
+      },
+      "id": "e2955975-5d24-4049-991b-b2afb351159f",
+      "name": "Modelo OpenAI",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        -1592,
+        1936
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "3nNzkjx6WvZeCeUg",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n\t\"type\": \"object\",\n\t\"properties\": {\n\t\t\"categoria\": {\n\t\t\t\"type\": \"string\",\n\t\t\t\"enum\": [\"Pendências de emissão\", \"Movimentações de apólice\", \"Vistoria de emissão\", \"Renovação\", \"Nova cotação\", \"Sinistro\", \"Financeiro\", \"Comissão\", \"Comunicados / parceiros / marketing\"]\n\t\t},\n\t\t\"confianca\": {\n\t\t\t\"type\": \"number\",\n\t\t\t\"minimum\": 0,\n\t\t\t\"maximum\": 1\n\t\t},\n\t\t\"justificativa\": {\n\t\t\t\"type\": \"string\"\n\t\t}\n\t}\n}",
+        "autoFix": true
+      },
+      "id": "e2287c73-3bef-4075-804e-6004c4947066",
+      "name": "Formato de Saída Estruturado",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        -1588,
+        1728
+      ]
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.output.categoria }}",
+                    "rightValue": "Pendências de emissão",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "id-1"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Pendências de emissão"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.output.categoria }}",
+                    "rightValue": "Movimentações de apólice",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "id-2"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Movimentações de apólice"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.output.categoria }}",
+                    "rightValue": "Vistoria de emissão",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "id-3"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Vistoria de emissão"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.output.categoria }}",
+                    "rightValue": "Renovação",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "id-4"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Renovação"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.output.categoria }}",
+                    "rightValue": "Nova cotação",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "id-5"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Nova cotação"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.output.categoria }}",
+                    "rightValue": "Sinistro",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "id-6"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Sinistro"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.output.categoria }}",
+                    "rightValue": "Financeiro",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "id-7"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Financeiro"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.output.categoria }}",
+                    "rightValue": "Comissão",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "id-8"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Comissão"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.output.categoria }}",
+                    "rightValue": "Comunicados / parceiros / marketing",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "id-9"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Comunicados / parceiros / marketing"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "e2af6d91-489f-488e-9c22-4ee5c4994375",
+      "name": "Rotear por Categoria",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        -1220,
+        1392
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "messageId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $('Emails da Caixa Compartilhada').item.json.id }}"
+        },
+        "updateFields": {
+          "categories": [
+            "Sinistro"
+          ]
+        }
+      },
+      "id": "4c6a10ef-070d-46bf-a898-0ba83d570e74",
+      "name": "Marcar como Sinistro",
+      "type": "n8n-nodes-base.microsoftOutlook",
+      "typeVersion": 2,
+      "position": [
+        -996,
+        1696
+      ],
+      "webhookId": "74d99e6f-1cb2-44d3-a66d-154aa45adf90",
+      "credentials": {
+        "microsoftOutlookOAuth2Api": {
+          "id": "T7yJ4aztxqXeJPIh",
+          "name": "Microsoft Outlook account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "messageId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $('Emails da Caixa Compartilhada').item.json.id }}"
+        },
+        "updateFields": {
+          "categories": [
+            "Pendências de emissão"
+          ]
+        }
+      },
+      "id": "757d363a-e897-4bce-b486-84161da246bb",
+      "name": "Marcar como Emissão",
+      "type": "n8n-nodes-base.microsoftOutlook",
+      "typeVersion": 2,
+      "position": [
+        -996,
+        736
+      ],
+      "webhookId": "30fc37f8-0c60-424e-b3d1-1df834a61873",
+      "credentials": {
+        "microsoftOutlookOAuth2Api": {
+          "id": "T7yJ4aztxqXeJPIh",
+          "name": "Microsoft Outlook account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "messageId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $('Emails da Caixa Compartilhada').item.json.id }}"
+        },
+        "updateFields": {
+          "categories": [
+            "Movimentações de apólice"
+          ]
+        }
+      },
+      "id": "aa138928-0f75-4c4c-bc48-d5212021bdc9",
+      "name": "Marcar como Financeiro",
+      "type": "n8n-nodes-base.microsoftOutlook",
+      "typeVersion": 2,
+      "position": [
+        -996,
+        928
+      ],
+      "webhookId": "d9860623-5ea0-48f2-ac3b-92d2a2dff04b",
+      "credentials": {
+        "microsoftOutlookOAuth2Api": {
+          "id": "T7yJ4aztxqXeJPIh",
+          "name": "Microsoft Outlook account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "messageId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $('Emails da Caixa Compartilhada').item.json.id }}"
+        },
+        "updateFields": {
+          "categories": [
+            "Vistoria de emissão"
+          ]
+        }
+      },
+      "id": "50100ce5-3652-474c-b4f5-253e06df3e93",
+      "name": "Marcar como Vistoria de emissão",
+      "type": "n8n-nodes-base.microsoftOutlook",
+      "typeVersion": 2,
+      "position": [
+        -996,
+        1120
+      ],
+      "webhookId": "a74b650c-4df5-4650-87dd-b588d1c26f76",
+      "credentials": {
+        "microsoftOutlookOAuth2Api": {
+          "id": "T7yJ4aztxqXeJPIh",
+          "name": "Microsoft Outlook account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "messageId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $('Emails da Caixa Compartilhada').item.json.id }}"
+        },
+        "updateFields": {
+          "categories": [
+            "Renovação"
+          ]
+        }
+      },
+      "id": "f1b0ae77-2bd8-4aa7-94f5-5354ffeee990",
+      "name": "Marcar como Renovação",
+      "type": "n8n-nodes-base.microsoftOutlook",
+      "typeVersion": 2,
+      "position": [
+        -996,
+        1312
+      ],
+      "webhookId": "de6c5fa2-7ded-4d7f-b7d1-c29da0ac89d0",
+      "credentials": {
+        "microsoftOutlookOAuth2Api": {
+          "id": "T7yJ4aztxqXeJPIh",
+          "name": "Microsoft Outlook account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "messageId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $('Emails da Caixa Compartilhada').item.json.id }}"
+        },
+        "updateFields": {
+          "categories": [
+            "Nova cotação"
+          ]
+        }
+      },
+      "id": "c5887b82-fb91-4966-9dc3-269847647437",
+      "name": "Marcar como Nova cotação",
+      "type": "n8n-nodes-base.microsoftOutlook",
+      "typeVersion": 2,
+      "position": [
+        -996,
+        1504
+      ],
+      "webhookId": "c94495f3-8c59-4e63-9364-3d61e7acaa2b",
+      "credentials": {
+        "microsoftOutlookOAuth2Api": {
+          "id": "T7yJ4aztxqXeJPIh",
+          "name": "Microsoft Outlook account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "messageId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $('Emails da Caixa Compartilhada').item.json.id }}"
+        },
+        "updateFields": {
+          "categories": [
+            "Financeiro"
+          ]
+        }
+      },
+      "id": "005950f0-fc32-400b-9614-fa4d302ed266",
+      "name": "Marcar como Financeiro1",
+      "type": "n8n-nodes-base.microsoftOutlook",
+      "typeVersion": 2,
+      "position": [
+        -996,
+        1888
+      ],
+      "webhookId": "7f6e6b39-74f3-4f15-8ae0-60067819a806",
+      "credentials": {
+        "microsoftOutlookOAuth2Api": {
+          "id": "T7yJ4aztxqXeJPIh",
+          "name": "Microsoft Outlook account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "messageId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $('Emails da Caixa Compartilhada').item.json.id }}"
+        },
+        "updateFields": {
+          "categories": [
+            "Comissão"
+          ]
+        }
+      },
+      "id": "4d29f2f8-2c78-41e6-a83c-f81c98799dec",
+      "name": "Marcar como Comissão",
+      "type": "n8n-nodes-base.microsoftOutlook",
+      "typeVersion": 2,
+      "position": [
+        -996,
+        2080
+      ],
+      "webhookId": "8bf07696-44be-4ab6-95c8-34d916159004",
+      "credentials": {
+        "microsoftOutlookOAuth2Api": {
+          "id": "T7yJ4aztxqXeJPIh",
+          "name": "Microsoft Outlook account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "messageId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $('Emails da Caixa Compartilhada').item.json.id }}"
+        },
+        "updateFields": {
+          "categories": [
+            "Comunicados / parceiros / marketing"
+          ]
+        }
+      },
+      "id": "31d77f89-bd43-49d5-886d-9a881575c9fd",
+      "name": "Marcar como Comunicados",
+      "type": "n8n-nodes-base.microsoftOutlook",
+      "typeVersion": 2,
+      "position": [
+        -996,
+        2272
+      ],
+      "webhookId": "2dd66cbd-64aa-40df-9b22-7e6d60fe479a",
+      "credentials": {
+        "microsoftOutlookOAuth2Api": {
+          "id": "T7yJ4aztxqXeJPIh",
+          "name": "Microsoft Outlook account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "shared": [
+    {
+      "updatedAt": "2026-04-02T16:33:40.478Z",
+      "createdAt": "2026-04-02T16:33:40.478Z",
+      "role": "workflow:owner",
+      "workflowId": "2u9Bl6jmYqNa93xr",
+      "projectId": "OI72yru3WBGIgT4P"
+    }
+  ],
+  "staticData": {
+    "node:Emails da Caixa Compartilhada": {
+      "lastTimeChecked": "2026-04-08T21:16:26.708-03:00"
+    }
+  },
+  "tags": [],
+  "triggerCount": 1,
+  "updatedAt": "2026-04-02T16:50:03.946Z",
+  "versionId": "f3b42a39-a91a-4d80-b8c5-38cbd1b7f0c4"
+}
