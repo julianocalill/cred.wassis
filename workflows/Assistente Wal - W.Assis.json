@@ -1,0 +1,477 @@
+{
+  "active": true,
+  "activeVersion": {
+    "updatedAt": "2026-03-24T13:51:13.592Z",
+    "createdAt": "2026-03-24T13:49:18.622Z",
+    "versionId": "e16eb909-0615-4f64-9102-9476ea8bb5eb",
+    "workflowId": "ffbMJJ57hKryoHCI",
+    "nodes": [
+      {
+        "parameters": {
+          "httpMethod": "POST",
+          "path": "chatwoot-ai-agent",
+          "options": {}
+        },
+        "id": "abb47284-4e41-4382-9467-7e01f9065229",
+        "name": "Webhook Chatwoot",
+        "type": "n8n-nodes-base.webhook",
+        "typeVersion": 1,
+        "position": [
+          -448,
+          32
+        ],
+        "webhookId": "chatwoot-ai-agent"
+      },
+      {
+        "parameters": {
+          "conditions": {
+            "string": [
+              {
+                "value1": "={{ $json.body.message_type }}",
+                "value2": "incoming"
+              }
+            ]
+          }
+        },
+        "id": "610170c9-0c5c-4f7e-a6d6-0f213ba17e97",
+        "name": "É mensagem do Cliente?",
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 1,
+        "position": [
+          -256,
+          32
+        ]
+      },
+      {
+        "parameters": {
+          "promptType": "define",
+          "text": "={{ $json.body.content }}"
+        },
+        "id": "78170d12-f457-4c35-b46d-6bd30c7a4e52",
+        "name": "IA - Qualificação",
+        "type": "@n8n/n8n-nodes-langchain.chainLlm",
+        "typeVersion": 1.4,
+        "position": [
+          48,
+          -64
+        ]
+      },
+      {
+        "parameters": {
+          "model": "gpt-5-nano",
+          "options": {}
+        },
+        "id": "9af9e3c9-4498-48f1-ac99-ceb4e6e6cf12",
+        "name": "OpenAI Chat Model",
+        "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "typeVersion": 1,
+        "position": [
+          112,
+          176
+        ],
+        "credentials": {
+          "openAiApi": {
+            "id": "3nNzkjx6WvZeCeUg",
+            "name": "OpenAi account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "=https://chat.wassis.com.br/api/v1/accounts/1/conversations/{{ $('Webhook Chatwoot').item.json.body.conversation.id }}/messages",
+          "sendHeaders": true,
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "api_access_token",
+                "value": "wN6TfEbdhRZmM38cR5vZV6sw"
+              }
+            ]
+          },
+          "sendBody": true,
+          "bodyParameters": {
+            "parameters": [
+              {
+                "name": "content",
+                "value": "={{ $json.text }}"
+              },
+              {
+                "name": "message_type",
+                "value": "outgoing"
+              },
+              {
+                "name": "private",
+                "value": "false"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "id": "3274fc5b-ec80-4d8c-9397-ace6fae911d1",
+        "name": "Responder no Chatwoot",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.1,
+        "position": [
+          368,
+          -64
+        ]
+      }
+    ],
+    "connections": {
+      "Webhook Chatwoot": {
+        "main": [
+          [
+            {
+              "node": "É mensagem do Cliente?",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "É mensagem do Cliente?": {
+        "main": [
+          [
+            {
+              "node": "IA - Qualificação",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "OpenAI Chat Model": {
+        "ai_languageModel": [
+          [
+            {
+              "node": "IA - Qualificação",
+              "type": "ai_languageModel",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "IA - Qualificação": {
+        "main": [
+          [
+            {
+              "node": "Responder no Chatwoot",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "authors": "Renato Martin de Assis",
+    "name": "Version e16eb909",
+    "description": "Versão Inicial",
+    "autosaved": true
+  },
+  "activeVersionId": "e16eb909-0615-4f64-9102-9476ea8bb5eb",
+  "connections": {
+    "Webhook Chatwoot": {
+      "main": [
+        [
+          {
+            "node": "É mensagem do Cliente?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "É mensagem do Cliente?": {
+      "main": [
+        [
+          {
+            "node": "Assistente Wal (IA)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Assistente Wal (IA)",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parser Lógica de Roteamento": {
+      "main": [
+        [
+          {
+            "node": "Enviar Resposta Chatwoot",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enviar Resposta Chatwoot": {
+      "main": [
+        [
+          {
+            "node": "Devo Transferir?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Devo Transferir?": {
+      "main": [
+        [
+          {
+            "node": "Aplicar Etiqueta Equipe",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Assistente Wal (IA)": {
+      "main": [
+        [
+          {
+            "node": "Parser Lógica de Roteamento",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2026-03-23T19:57:49.732Z",
+  "id": "ffbMJJ57hKryoHCI",
+  "isArchived": false,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "Assistente Wal - W.Assis",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "chatwoot-ai-agent",
+        "options": {}
+      },
+      "id": "abb47284-4e41-4382-9467-7e01f9065229",
+      "name": "Webhook Chatwoot",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        -2256,
+        80
+      ],
+      "webhookId": "chatwoot-ai-agent"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.body.message_type }}",
+              "value2": "incoming"
+            }
+          ]
+        }
+      },
+      "id": "2bbf132f-5d66-4a1e-b2c4-71b49688f1fb",
+      "name": "É mensagem do Cliente?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        -2032,
+        80
+      ]
+    },
+    {
+      "parameters": {
+        "model": "gpt-5-nano",
+        "options": {}
+      },
+      "id": "c69e6506-46f9-4344-8b01-f0dcb72880e8",
+      "name": "OpenAI Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [
+        -1808,
+        256
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "3nNzkjx6WvZeCeUg",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const text = $input.first().json.text || \"\";\nlet cleanText = text;\nlet labelTag = null;\n\n// Procura pelas tags secretas da IA e extrai o rótulo da área\nif (text.includes(\"[TRANSFERIR_VENDAS]\")) {\n  cleanText = text.replace(\"[TRANSFERIR_VENDAS]\", \"\").trim();\n  labelTag = \"Vendas\";\n} else if (text.includes(\"[TRANSFERIR_FINANCEIRO]\")) {\n  cleanText = text.replace(\"[TRANSFERIR_FINANCEIRO]\", \"\").trim();\n  labelTag = \"Financeiro\";\n} else if (text.includes(\"[TRANSFERIR_SINISTRO]\")) {\n  cleanText = text.replace(\"[TRANSFERIR_SINISTRO]\", \"\").trim();\n  labelTag = \"Sinistro\";\n}\n\nreturn {\n  clean_text: cleanText,\n  label: labelTag,\n  conversation_id: $('Webhook Chatwoot1').item.json.body.conversation.id\n};"
+      },
+      "id": "14cabf86-0bb7-4cff-a1ca-55f388b8819e",
+      "name": "Parser Lógica de Roteamento",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1520,
+        64
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://chat.wassis.com.br/api/v1/accounts/1/conversations/{{ $json.conversation_id }}/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "api_access_token",
+              "value": "wN6TfEbdhRZmM38cR5vZV6sw"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "content",
+              "value": "={{ $json.clean_text }}"
+            },
+            {
+              "name": "message_type",
+              "value": "outgoing"
+            },
+            {
+              "name": "private",
+              "value": "false"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "3675ba7d-5aee-4ec6-9723-a1bf784839a1",
+      "name": "Enviar Resposta Chatwoot",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        -1312,
+        64
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.label }}",
+              "operation": "isNotEmpty"
+            }
+          ]
+        }
+      },
+      "id": "e5d136cf-0a96-425e-b739-87b8db0d6ae4",
+      "name": "Devo Transferir?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        -1088,
+        64
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://chat.wassis.com.br/api/v1/accounts/1/conversations/{{ $('Parser Lógica de Roteamento').item.json.conversation_id }}/labels",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "api_access_token",
+              "value": "wN6TfEbdhRZmM38cR5vZV6sw"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "labels",
+              "value": "={{ [ $('Parser Lógica de Roteamento').item.json.label ] }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "23df4f0a-c108-4aac-b120-071d6330ec00",
+      "name": "Aplicar Etiqueta Equipe",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        -848,
+        48
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.body.content }}",
+        "messages": {
+          "messageValues": [
+            {
+              "message": "Você é a Wal, a assistente virtual de Inteligência Artificial da W.Assis Corretora de Seguros. Você é simpática, ágil e profissional.\\nSeu objetivo é qualificar o lead e prepará-lo para transferência a um especialista.\\n\\nREGRAS DE TRIAGEM:\\n1. Financeiro: cliente que quer boleto, pagar ou nota fiscal. Diga que o departamento financeiro foi notificado. Termine a mensagem OBRIGATORIAMENTE com a exata tag oculta: [TRANSFERIR_FINANCEIRO]\\n\\n2. Sinistro: cliente que bateu o carro, quer guincho ou assistência emergencial. Preste solidariedade, avise que a equipe de sinistros foi notificada para prioridade. Termine OBRIGATORIAMENTE com: [TRANSFERIR_SINISTRO]\\n\\n3. Vendas/Renovação: cliente que quer seguro novo, cotação ou renovar. Regra de 2 passos:\\n  Passo A: Pergunte qual o tipo de seguro e se ele já é cliente W.Assis.\\n  Passo B: Somente se ele JÁ respondeu isso, diga que a equipe comercial está pronta. Neste momento, termine OBRIGATORIAMENTE a mensagem com: [TRANSFERIR_VENDAS]\\n\\nMantenha respostas curtas e naturais."
+            }
+          ]
+        }
+      },
+      "id": "7a39bb98-ccc3-4e7e-b0ac-fbbd4e89b21f",
+      "name": "Assistente Wal (IA)",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.4,
+      "position": [
+        -1808,
+        64
+      ]
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": true,
+    "timeSavedMode": "fixed",
+    "callerPolicy": "workflowsFromSameOwner",
+    "saveExecutionProgress": true,
+    "executionTimeout": 120
+  },
+  "shared": [
+    {
+      "updatedAt": "2026-03-23T19:57:49.732Z",
+      "createdAt": "2026-03-23T19:57:49.732Z",
+      "role": "workflow:owner",
+      "workflowId": "ffbMJJ57hKryoHCI",
+      "projectId": "OI72yru3WBGIgT4P"
+    }
+  ],
+  "staticData": null,
+  "tags": [
+    {
+      "updatedAt": "2026-04-07T15:05:33.362Z",
+      "createdAt": "2026-04-07T15:05:33.362Z",
+      "id": "p7e2B7Q0fOAmJZCy",
+      "name": "CRM"
+    }
+  ],
+  "triggerCount": 1,
+  "updatedAt": "2026-04-07T15:06:19.426Z",
+  "versionId": "4f9ba9b2-a0df-45d9-9291-fcd066857f3a"
+}
