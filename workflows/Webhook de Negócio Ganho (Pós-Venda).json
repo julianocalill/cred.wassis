@@ -1,0 +1,361 @@
+{
+  "active": true,
+  "activeVersion": {
+    "updatedAt": "2026-04-07T12:50:12.120Z",
+    "createdAt": "2026-04-07T12:50:12.120Z",
+    "versionId": "edd2fcdc-540b-4777-a696-f9e6d67f6213",
+    "workflowId": "jKwvnUZPJmOW9DrT",
+    "nodes": [
+      {
+        "parameters": {
+          "httpMethod": "POST",
+          "path": "negocio-ganho",
+          "options": {}
+        },
+        "id": "25ecf249-e8c3-4e74-ad63-4fe8d1ea0b0c",
+        "name": "Webhook",
+        "type": "n8n-nodes-base.webhook",
+        "typeVersion": 2.1,
+        "position": [
+          0,
+          -576
+        ],
+        "webhookId": "5fc5bf39-9b33-40e0-ab62-c6e597b5e9e5"
+      },
+      {
+        "parameters": {
+          "conditions": {
+            "combinator": "and",
+            "conditions": [
+              {
+                "id": "70321188-887d-4bc6-abaf-f44f2c5c4107",
+                "leftValue": "={{ $json.body.fila.emailProposta.anexos && $json.body.fila.emailProposta.anexos.length > 0 }}",
+                "operator": {
+                  "operation": "true",
+                  "type": "boolean",
+                  "singleValue": true
+                },
+                "rightValue": ""
+              }
+            ],
+            "options": {
+              "version": 3,
+              "leftValue": "",
+              "caseSensitive": true,
+              "typeValidation": "strict"
+            }
+          }
+        },
+        "id": "c807f9da-f182-40b1-a4d3-eac7ff20126e",
+        "name": "verificar anexo",
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2.3,
+        "position": [
+          224,
+          -576
+        ]
+      },
+      {
+        "parameters": {
+          "toRecipients": "renato@wassis.com.br",
+          "subject": "={{ $json.body.fila.emailProposta.assunto }}",
+          "bodyContent": "=ID: {{ $json.body.oportunidade.id }}\nVigência: {{ $json.body.oportunidade.vigencia }}\nTipo seguro: {{ $json.body.oportunidade.tipo_seguro }}\nGerente: {{ $json.body.oportunidade.gerente_id }}\nOBS: {{ $json.body.fila.emailProposta.obs }}",
+          "additionalFields": {}
+        },
+        "id": "c56c3b3e-41e3-4ace-abcf-384f86615d02",
+        "name": "Enviar sem anexo",
+        "type": "n8n-nodes-base.microsoftOutlook",
+        "typeVersion": 2,
+        "position": [
+          656,
+          -704
+        ],
+        "webhookId": "27a18f71-9c21-4722-8eea-081c7f993a39",
+        "credentials": {
+          "microsoftOutlookOAuth2Api": {
+            "id": "T7yJ4aztxqXeJPIh",
+            "name": "Microsoft Outlook account"
+          }
+        }
+      },
+      {
+        "id": "code-converter-base64",
+        "name": "Preparar email com anexos",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          448,
+          -480
+        ],
+        "parameters": {
+          "jsCode": "// Prepara o payload da Microsoft Graph API para envio de e-mail com N anexos\n// Base64 do CRM vai direto para a API - sem conversão binária intermediária\n// Suporta qualquer formato: PDF, imagens, áudios, etc.\n\nconst item = $input.first();\nconst body = item.json.body;\nconst emailProposta = body?.fila?.emailProposta;\nconst oportunidade = body?.oportunidade;\n\n// Validação\nif (!emailProposta) {\n  throw new Error('Dados de emailProposta não encontrados no payload');\n}\n\n// Corpo do e-mail\nconst emailBody = [\n  `ID: ${oportunidade?.id || ''}`,\n  `Vigência: ${oportunidade?.vigencia || ''}`,\n  `Tipo seguro: ${oportunidade?.tipo_seguro || ''}`,\n  `Gerente: ${oportunidade?.gerente_id || ''}`,\n  `OBS: ${emailProposta?.obs || ''}`\n].join('\\n');\n\n// Construir TODOS os anexos no formato Graph API (base64 inline)\nconst attachments = (emailProposta.anexos || []).map((anexo, i) => ({\n  '@odata.type': '#microsoft.graph.fileAttachment',\n  'name': anexo.name || `anexo_${i}`,\n  'contentType': anexo.mime || 'application/octet-stream',\n  'contentBytes': anexo.base64\n}));\n\n// Log para monitoramento\nconsole.log(`Preparando e-mail com ${attachments.length} anexo(s)`);\n\n// Payload completo para POST /me/sendMail\nreturn [{\n  json: {\n    message: {\n      subject: emailProposta.assunto || 'Sem assunto',\n      body: {\n        contentType: 'Text',\n        content: emailBody\n      },\n      toRecipients: [\n        {\n          emailAddress: {\n            address: 'renato@wassis.com.br'\n          }\n        }\n      ],\n      attachments\n    }\n  }\n}];"
+        }
+      },
+      {
+        "id": "http-enviar-email",
+        "name": "Enviar e-mail via API",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.4,
+        "position": [
+          656,
+          -480
+        ],
+        "parameters": {
+          "authentication": "predefinedCredentialType",
+          "contentType": "json",
+          "jsonBody": "={{ JSON.stringify($json) }}",
+          "method": "POST",
+          "nodeCredentialType": "microsoftOutlookOAuth2Api",
+          "options": {},
+          "sendBody": true,
+          "specifyBody": "json",
+          "url": "https://graph.microsoft.com/v1.0/me/sendMail"
+        },
+        "credentials": {
+          "microsoftOutlookOAuth2Api": {
+            "id": "T7yJ4aztxqXeJPIh",
+            "name": "Microsoft Outlook account"
+          }
+        }
+      }
+    ],
+    "connections": {
+      "Webhook": {
+        "main": [
+          [
+            {
+              "node": "verificar anexo",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "verificar anexo": {
+        "main": [
+          [
+            {
+              "node": "Preparar email com anexos",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Enviar sem anexo",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Preparar email com anexos": {
+        "main": [
+          [
+            {
+              "node": "Enviar e-mail via API",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "authors": "Renato Martin de Assis",
+    "name": null,
+    "description": null,
+    "autosaved": false
+  },
+  "activeVersionId": "edd2fcdc-540b-4777-a696-f9e6d67f6213",
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "verificar anexo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "verificar anexo": {
+      "main": [
+        [
+          {
+            "node": "Preparar email com anexos",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Enviar sem anexo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparar email com anexos": {
+      "main": [
+        [
+          {
+            "node": "Enviar e-mail via API",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2026-03-25T23:53:38.332Z",
+  "id": "jKwvnUZPJmOW9DrT",
+  "isArchived": false,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "Webhook de Negócio Ganho (Pós-Venda)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "negocio-ganho",
+        "options": {}
+      },
+      "id": "25ecf249-e8c3-4e74-ad63-4fe8d1ea0b0c",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        -576
+      ],
+      "webhookId": "5fc5bf39-9b33-40e0-ab62-c6e597b5e9e5"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "70321188-887d-4bc6-abaf-f44f2c5c4107",
+              "leftValue": "={{ $json.body.fila.emailProposta.anexos && $json.body.fila.emailProposta.anexos.length > 0 }}",
+              "operator": {
+                "operation": "true",
+                "type": "boolean",
+                "singleValue": true
+              },
+              "rightValue": ""
+            }
+          ],
+          "options": {
+            "version": 3,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          }
+        },
+        "options": {}
+      },
+      "id": "c807f9da-f182-40b1-a4d3-eac7ff20126e",
+      "name": "verificar anexo",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        224,
+        -576
+      ]
+    },
+    {
+      "parameters": {
+        "toRecipients": "renato@wassis.com.br",
+        "subject": "={{ $json.body.fila.emailProposta.assunto }}",
+        "bodyContent": "=ID: {{ $json.body.oportunidade.id }}\nVigência: {{ $json.body.oportunidade.vigencia }}\nTipo seguro: {{ $json.body.oportunidade.tipo_seguro }}\nGerente: {{ $json.body.oportunidade.gerente_id }}\nOBS: {{ $json.body.fila.emailProposta.obs }}",
+        "additionalFields": {}
+      },
+      "id": "c56c3b3e-41e3-4ace-abcf-384f86615d02",
+      "name": "Enviar sem anexo",
+      "type": "n8n-nodes-base.microsoftOutlook",
+      "typeVersion": 2,
+      "position": [
+        656,
+        -704
+      ],
+      "webhookId": "27a18f71-9c21-4722-8eea-081c7f993a39",
+      "credentials": {
+        "microsoftOutlookOAuth2Api": {
+          "id": "T7yJ4aztxqXeJPIh",
+          "name": "Microsoft Outlook account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Prepara o payload da Microsoft Graph API para envio de e-mail com N anexos\n// Base64 do CRM vai direto para a API - sem conversão binária intermediária\n// Suporta qualquer formato: PDF, imagens, áudios, etc.\n\nconst item = $input.first();\nconst body = item.json.body;\nconst emailProposta = body?.fila?.emailProposta;\nconst oportunidade = body?.oportunidade;\n\n// Validação\nif (!emailProposta) {\n  throw new Error('Dados de emailProposta não encontrados no payload');\n}\n\n// Corpo do e-mail\nconst emailBody = [\n  `ID: ${oportunidade?.id || ''}`,\n  `Vigência: ${oportunidade?.vigencia || ''}`,\n  `Tipo seguro: ${oportunidade?.tipo_seguro || ''}`,\n  `Gerente: ${oportunidade?.gerente_id || ''}`,\n  `OBS: ${emailProposta?.obs || ''}`\n].join('\\n');\n\n// Construir TODOS os anexos no formato Graph API (base64 inline)\nconst attachments = (emailProposta.anexos || []).map((anexo, i) => ({\n  '@odata.type': '#microsoft.graph.fileAttachment',\n  'name': anexo.name || `anexo_${i}`,\n  'contentType': anexo.mime || 'application/octet-stream',\n  'contentBytes': anexo.base64\n}));\n\n// Log para monitoramento\nconsole.log(`Preparando e-mail com ${attachments.length} anexo(s)`);\n\n// Payload completo para POST /me/sendMail\nreturn [{\n  json: {\n    message: {\n      subject: emailProposta.assunto || 'Sem assunto',\n      body: {\n        contentType: 'Text',\n        content: emailBody\n      },\n      toRecipients: [\n        {\n          emailAddress: {\n            address: 'renato@wassis.com.br'\n          }\n        }\n      ],\n      attachments\n    }\n  }\n}];"
+      },
+      "id": "code-converter-base64",
+      "name": "Preparar email com anexos",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        448,
+        -480
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.microsoft.com/v1.0/me/sendMail",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "microsoftOutlookOAuth2Api",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json) }}",
+        "options": {}
+      },
+      "id": "http-enviar-email",
+      "name": "Enviar e-mail via API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        656,
+        -480
+      ],
+      "credentials": {
+        "microsoftOutlookOAuth2Api": {
+          "id": "T7yJ4aztxqXeJPIh",
+          "name": "Microsoft Outlook account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "shared": [
+    {
+      "updatedAt": "2026-03-25T23:53:38.332Z",
+      "createdAt": "2026-03-25T23:53:38.332Z",
+      "role": "workflow:owner",
+      "workflowId": "jKwvnUZPJmOW9DrT",
+      "projectId": "OI72yru3WBGIgT4P"
+    }
+  ],
+  "staticData": null,
+  "tags": [
+    {
+      "updatedAt": "2026-04-07T15:05:33.362Z",
+      "createdAt": "2026-04-07T15:05:33.362Z",
+      "id": "p7e2B7Q0fOAmJZCy",
+      "name": "CRM"
+    }
+  ],
+  "triggerCount": 1,
+  "updatedAt": "2026-04-07T15:05:36.963Z",
+  "versionId": "6e7323ed-c843-4eb1-a312-88af6fa2a378"
+}
