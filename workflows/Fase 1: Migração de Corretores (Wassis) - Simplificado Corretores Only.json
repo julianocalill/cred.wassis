@@ -1,0 +1,535 @@
+{
+  "active": true,
+  "activeVersion": {
+    "updatedAt": "2026-04-07T18:51:27.489Z",
+    "createdAt": "2026-04-07T18:51:27.489Z",
+    "versionId": "4405afff-4ae4-4414-a739-a0b11863893b",
+    "workflowId": "VDALODVoZtLH9yin",
+    "nodes": [
+      {
+        "id": "trigger_simple_v11",
+        "name": "Trigger",
+        "parameters": {
+          "httpMethod": "GET",
+          "path": "test-migrations-wassis-trigger-v6",
+          "responseMode": "onReceived"
+        },
+        "position": [
+          200,
+          240
+        ],
+        "type": "n8n-nodes-base.webhook",
+        "typeVersion": 1,
+        "webhookId": "07865868-0ce4-4e51-867e-a8c8ebf2367e"
+      },
+      {
+        "id": "csv_inj_simple_v11",
+        "name": "CSV_Data_Injected",
+        "parameters": {
+          "jsCode": "return [{\n  json: {\n    csv_raw: `\"active\",\"Cargo\",\"chave_pix\",\"Cliente\",\"company\",\"CPF/CNPJ\",\"delete\",\"Empresa\",\"foto\",\"link\",\"Nome\",\"Nome_sobrenome\",\"Onboarding\",\"reward_balance\",\"reward_total\",\"reward_type\",\"role\",\"Sobrenome\",\"Creation Date\",\"Modified Date\",\"Slug\",\"email\",\"null\",\"unique id\"\n\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"//260be02d26072f8c794ac04203b998de.cdn.bubble.io/f1720631137330x682148151832612200/olkjq87lylcxwjwgp94xry3fpesb.jpg\",\"\",\"Renato\",\"\",\"não\",\"\",\"\",\"\",\"Administrador\",\"\",\"Apr 6, 2022 5:26 pm\",\"Feb 7, 2026 9:46 am\",\"\",\"renato@wassis.com.br\",\"\",\"1649276796087x419883886772405950\"\n\"\",\"Gerente\",\"\",\"\",\"\",\"\",\"\",\"\",\"//260be02d26072f8c794ac04203b998de.cdn.bubble.io/f1720701211948x117633240900773870/Captura%20de%20tela%202024-07-11%20093309.png\",\"\",\"Vinicius\",\"\",\"não\",\"\",\"\",\"\",\"Vendedor\",\"\",\"Apr 28, 2022 2:19 pm\",\"Apr 6, 2026 12:05 pm\",\"\",\"vinicius@wassis.com.br\",\"\",\"1651166372135x377880313405403650\"\n\"\",\"Gerente\",\"\",\"\",\"\",\"\",\"\",\"\",\"//260be02d26072f8c794ac04203b998de.cdn.bubble.io/f1721143971119x886363899729679000/Captura%20de%20tela%202024-07-16%20123153.png\",\"\",\"Gustavo\",\"\",\"não\",\"\",\"\",\"\",\"Vendedor\",\"Assis\",\"Apr 28, 2022 8:35 pm\",\"Jul 16, 2024 12:32 pm\",\"\",\"gustavo@wassis.com.br\",\"\",\"1651188948706x743418539099612800\"\n\"\",\"Gerente\",\"\",\"\",\"\",\"\",\"\",\"\",\"//260be02d26072f8c794ac04203b998de.cdn.bubble.io/f1721144055400x960887613395599900/Captura%20de%20tela%202024-07-16%20123352.png\",\"\",\"Meire\",\"\",\"não\",\"\",\"\",\"\",\"Vendedor\",\"\",\"May 6, 2022 11:31 am\",\"Jul 16, 2024 12:34 pm\",\"\",\"meire@wassis.com.br\",\"\",\"1651847461342x810657075292172700\"\n\"\",\"Produtor\",\"\",\"\",\"\",\"\",\"\",\"\",\"//260be02d26072f8c794ac04203b998de.cdn.bubble.io/f1720631046675x204421075440900380/Foto.jpg\",\"\",\"Ana Flávia\",\"\",\"não\",\"\",\"\",\"\",\"Vendedor\",\"\",\"May 6, 2022 11:31 am\",\"Jul 10, 2024 2:04 pm\",\"\",\"anaflavia@wassis.com.br\",\"\",\"1651847512287x967034720416115800\"\n\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"//260be02d26072f8c794ac04203b998de.cdn.bubble.io/f1720631021978x796129439327380700/384821711_664804072468651_8095212226983498069_n.jpg\",\"\",\"Juliana\",\"\",\"não\",\"\",\"\",\"\",\"Vendedor\",\"Cremonesi\",\"May 6, 2022 11:32 am\",\"Jul 10, 2024 2:03 pm\",\"\",\"juliana.cremonesi@wassis.com.br\",\"\",\"1651847554531x623336657062634900\"\n\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"//s3.amazonaws.com/appforest_uf/f1658753433798x610015103298824600/Hicila.jpg\",\"\",\"Hicila\",\"\",\"sim\",\"\",\"\",\"\",\"Vendedor\",\"\",\"Jul 25, 2022 9:51 am\",\"Jul 25, 2022 9:51 am\",\"\",\"hicila.fernandes@wassis.com.br\",\"\",\"1658753463558x597822814731593300\"\n\"\",\"Produtor\",\"\",\"\",\"\",\"\",\"\",\"\",\"//s3.amazonaws.com/appforest_uf/f1665000865360x785630995029376300/isabella.png\",\"\",\"Isabella\",\"\",\"\",\"\",\"\",\"\",\"Vendedor\",\"Riva\",\"Oct 5, 2022 5:14 pm\",\"Jan 7, 2023 10:51 am\",\"\",\"isabella@wassis.com.br\",\"\",\"1665000868626x744670643298209800\"\n\"\",\"Produtor\",\"\",\"\",\"\",\"\",\"\",\"\",\"//260be02d26072f8c794ac04203b998de.cdn.bubble.io/f1711040205962x791741327093987100/katiuscia.jpg\",\"\",\"Katiuscia\",\"\",\"\",\"\",\"\",\"\",\"Vendedor\",\"Toquato\",\"Mar 12, 2024 12:36 pm\",\"Mar 21, 2024 1:56 pm\",\"\",\"katiuscia@wassis.com.br\",\"\",\"1710257781847x879814679554580300\"\n\"\",\"Produtor\",\"\",\"\",\"\",\"\",\"\",\"\",\"//260be02d26072f8c794ac04203b998de.cdn.bubble.io/f1720701130159x767815566803290900/Foto.jpg\",\"\",\"Antonia\",\"Lopes\",\"sim\",\"\",\"\",\"\",\"Vendedor\",\"\",\"Jul 11, 2024 9:32 am\",\"Aug 24, 2024 1:51 pm\",\"\",\"antonia@wassis.com.br\",\"\",\"1720701152950x524552927015759900\"\n\"sim\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"1770383615689x975109008957469200\",\"Vinicius Assis\",\"\",\"não\",\"\",\"\",\"Bronze\",\"Cliente\",\"\",\"Feb 6, 2026 10:12 am\",\"Feb 6, 2026 10:16 am\",\"\",\"vinicius.wassis@gmail.com\",\"\",\"1770383577028x591067916704202800\"\n\"sim\",\"\",\"\",\"\",\"1770468216993x290360588970229760\",\"\",\"\",\"\",\"\",\"\",\"Kaue Galvão\",\"\",\"não\",\"\",\"\",\"Bronze\",\"Indicador Parceiro\",\"\",\"Feb 7, 2026 9:36 am\",\"Feb 7, 2026 9:44 am\",\"\",\"kaue.ggp@gmail.com\",\"\",\"1770467815475x407490622731747650\"\n\"sim\",\"Produtor\",\"\",\"\",\"\",\"\",\"\",\"\",\"//260be02d26072f8c794ac04203b998de.cdn.bubble.io/f1770742196327x925153712029831200/Captura%20de%20tela%202026-02-10%20134924.png\",\"\",\"Magna\",\"Magna Martins\",\"sim\",\"\",\"\",\"\",\"Vendedor\",\"Martins\",\"Feb 10, 2026 1:38 pm\",\"Feb 10, 2026 1:50 pm\",\"\",\"magna@wassis.com.br\",\"\",\"1770741508239x216587363715476930\"`\n  }\n}];"
+        },
+        "position": [
+          400,
+          240
+        ],
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 1
+      },
+      {
+        "id": "transform_simple_v11_v2",
+        "name": "TransformDataCSV",
+        "parameters": {
+          "jsCode": "const csv = $json.csv_raw;\nconst lines = csv.split('\\n');\nconst results = [];\n\nfor (let i = 1; i < lines.length; i++) {\n  if (!lines[i]) continue;\n  const currentLine = lines[i].split('\",\"');\n  const obj = {};\n  \n  obj.email = currentLine[21]?.replace(/\"/g, '') || '';\n  obj.nome_completo = currentLine[10]?.replace(/\"/g, '') || '';\n  obj.perfil = currentLine[1] || 'Vendedor';\n  obj.bubble_id = currentLine[23]?.replace(/\"/g, '') || '';\n  obj.avatar_url = (currentLine[8] && currentLine[8].length > 5) ? 'https:' + currentLine[8].replace(/\"/g, '') : '';\n  \n  if (obj.email) results.push({ json: obj });\n}\nreturn results;"
+        },
+        "position": [
+          600,
+          240
+        ],
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 1
+      },
+      {
+        "credentials": {
+          "postgres": {
+            "id": "4hBCxfGMrrXEqEmj",
+            "name": "Supabase"
+          }
+        },
+        "id": "get_sup_simple_v11",
+        "name": "GetSupabaseCorretores",
+        "parameters": {
+          "operation": "executeQuery",
+          "query": "SELECT id, nome_completo, bubble_id FROM public.corretores;"
+        },
+        "position": [
+          800,
+          240
+        ],
+        "type": "n8n-nodes-base.postgres",
+        "typeVersion": 2.6
+      },
+      {
+        "id": "upsert_logic_simple_v11",
+        "name": "PrepararUpsertSQL",
+        "parameters": {
+          "jsCode": "const bubbleItems = $(\"TransformDataCSV\").all();\nconst supabaseItems = $(\"GetSupabaseCorretores\").all();\n\nreturn bubbleItems.map(item => {\n  const d = item.json;\n  const match = supabaseItems.find(s => \n    (s.json.bubble_id && s.json.bubble_id === d.bubble_id) ||\n    (d.nome_completo === 'Renato' && s.json.nome_completo === 'Renato') ||\n    (d.nome_completo.includes('Vinicius') && s.json.nome_completo.includes('Vinicius'))\n  );\n  \n  if (match) {\n    return { json: { ...d, id: match.json.id, type: 'update' } };\n  } else {\n    return { json: { ...d, type: 'create' } };\n  }\n});"
+        },
+        "position": [
+          1000,
+          240
+        ],
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 1
+      },
+      {
+        "id": "wait_simple_v11",
+        "name": "WaitToSplit",
+        "parameters": {
+          "jsCode": "return items;"
+        },
+        "position": [
+          1200,
+          240
+        ],
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 1
+      },
+      {
+        "id": "switch_simple_v11",
+        "name": "CheckAcao",
+        "parameters": {
+          "dataType": "string",
+          "rules": {
+            "rules": [
+              {
+                "operation": "equal",
+                "value": "update"
+              },
+              {
+                "operation": "equal",
+                "value": "create"
+              }
+            ]
+          },
+          "value": "={{ $json.type }}"
+        },
+        "position": [
+          1400,
+          240
+        ],
+        "type": "n8n-nodes-base.switch",
+        "typeVersion": 1
+      },
+      {
+        "credentials": {
+          "postgres": {
+            "id": "4hBCxfGMrrXEqEmj",
+            "name": "Supabase"
+          }
+        },
+        "id": "up_post_simple_v11_v2",
+        "name": "UpdateExistentesPostgres",
+        "parameters": {
+          "operation": "executeQuery",
+          "query": "={{ \"UPDATE public.corretores SET nome_completo = '\" + $json.nome_completo.replace(/'/g, \"''\") + \"', perfil = '\" + $json.perfil + \"', bubble_id = '\" + $json.bubble_id + \"', avatar_url = NULLIF('\" + $json.avatar_url + \"', '') WHERE id = '\" + $json.id + \"'::uuid;\" }}"
+        },
+        "position": [
+          1650,
+          150
+        ],
+        "type": "n8n-nodes-base.postgres",
+        "typeVersion": 2.6
+      },
+      {
+        "credentials": {
+          "postgres": {
+            "id": "4hBCxfGMrrXEqEmj",
+            "name": "Supabase"
+          }
+        },
+        "id": "ins_nov_simple_v11_v2_new",
+        "name": "InsertNovosPostgres",
+        "parameters": {
+          "operation": "executeQuery",
+          "query": "={{ \"INSERT INTO public.corretores (id, nome_completo, perfil, bubble_id, avatar_url) VALUES (gen_random_uuid(), '\" + $json.nome_completo.replace(/'/g, \"''\") + \"', '\" + $json.perfil + \"', '\" + $json.bubble_id + \"', NULLIF('\" + $json.avatar_url + \"', ''));\" }}"
+        },
+        "position": [
+          1650,
+          350
+        ],
+        "type": "n8n-nodes-base.postgres",
+        "typeVersion": 2.6
+      }
+    ],
+    "connections": {
+      "CSV_Data_Injected": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "TransformDataCSV",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "CheckAcao": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "UpdateExistentesPostgres",
+              "type": "main"
+            }
+          ],
+          [
+            {
+              "index": 0,
+              "node": "InsertNovosPostgres",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "GetSupabaseCorretores": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "PrepararUpsertSQL",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "PrepararUpsertSQL": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "WaitToSplit",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "TransformDataCSV": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "GetSupabaseCorretores",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Trigger": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "CSV_Data_Injected",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "WaitToSplit": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "CheckAcao",
+              "type": "main"
+            }
+          ]
+        ]
+      }
+    },
+    "authors": "Renato Martin de Assis",
+    "name": null,
+    "description": null,
+    "autosaved": false
+  },
+  "activeVersionId": "4405afff-4ae4-4414-a739-a0b11863893b",
+  "connections": {
+    "CSV_Data_Injected": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "TransformDataCSV",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "CheckAcao": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "UpdateExistentesPostgres",
+            "type": "main"
+          }
+        ],
+        [
+          {
+            "index": 0,
+            "node": "InsertNovosPostgres",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "GetSupabaseCorretores": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "PrepararUpsertSQL",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "PrepararUpsertSQL": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "WaitToSplit",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "TransformDataCSV": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "GetSupabaseCorretores",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Trigger": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "CSV_Data_Injected",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "WaitToSplit": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "CheckAcao",
+            "type": "main"
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2026-04-07T15:04:29.098Z",
+  "id": "VDALODVoZtLH9yin",
+  "isArchived": false,
+  "meta": null,
+  "name": "Fase 1: Migração de Corretores (Wassis) - Simplificado Corretores Only",
+  "nodes": [
+    {
+      "id": "trigger_simple_v11",
+      "name": "Trigger",
+      "parameters": {
+        "httpMethod": "GET",
+        "path": "test-migrations-wassis-trigger-v6",
+        "responseMode": "onReceived"
+      },
+      "position": [
+        200,
+        240
+      ],
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "webhookId": "07865868-0ce4-4e51-867e-a8c8ebf2367e"
+    },
+    {
+      "id": "csv_inj_simple_v11",
+      "name": "CSV_Data_Injected",
+      "parameters": {
+        "jsCode": "return [{\n  json: {\n    csv_raw: `\"active\",\"Cargo\",\"chave_pix\",\"Cliente\",\"company\",\"CPF/CNPJ\",\"delete\",\"Empresa\",\"foto\",\"link\",\"Nome\",\"Nome_sobrenome\",\"Onboarding\",\"reward_balance\",\"reward_total\",\"reward_type\",\"role\",\"Sobrenome\",\"Creation Date\",\"Modified Date\",\"Slug\",\"email\",\"null\",\"unique id\"\n\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"//260be02d26072f8c794ac04203b998de.cdn.bubble.io/f1720631137330x682148151832612200/olkjq87lylcxwjwgp94xry3fpesb.jpg\",\"\",\"Renato\",\"\",\"não\",\"\",\"\",\"\",\"Administrador\",\"\",\"Apr 6, 2022 5:26 pm\",\"Feb 7, 2026 9:46 am\",\"\",\"renato@wassis.com.br\",\"\",\"1649276796087x419883886772405950\"\n\"\",\"Gerente\",\"\",\"\",\"\",\"\",\"\",\"\",\"//260be02d26072f8c794ac04203b998de.cdn.bubble.io/f1720701211948x117633240900773870/Captura%20de%20tela%202024-07-11%20093309.png\",\"\",\"Vinicius\",\"\",\"não\",\"\",\"\",\"\",\"Vendedor\",\"\",\"Apr 28, 2022 2:19 pm\",\"Apr 6, 2026 12:05 pm\",\"\",\"vinicius@wassis.com.br\",\"\",\"1651166372135x377880313405403650\"\n\"\",\"Gerente\",\"\",\"\",\"\",\"\",\"\",\"\",\"//260be02d26072f8c794ac04203b998de.cdn.bubble.io/f1721143971119x886363899729679000/Captura%20de%20tela%202024-07-16%20123153.png\",\"\",\"Gustavo\",\"\",\"não\",\"\",\"\",\"\",\"Vendedor\",\"Assis\",\"Apr 28, 2022 8:35 pm\",\"Jul 16, 2024 12:32 pm\",\"\",\"gustavo@wassis.com.br\",\"\",\"1651188948706x743418539099612800\"\n\"\",\"Gerente\",\"\",\"\",\"\",\"\",\"\",\"\",\"//260be02d26072f8c794ac04203b998de.cdn.bubble.io/f1721144055400x960887613395599900/Captura%20de%20tela%202024-07-16%20123352.png\",\"\",\"Meire\",\"\",\"não\",\"\",\"\",\"\",\"Vendedor\",\"\",\"May 6, 2022 11:31 am\",\"Jul 16, 2024 12:34 pm\",\"\",\"meire@wassis.com.br\",\"\",\"1651847461342x810657075292172700\"\n\"\",\"Produtor\",\"\",\"\",\"\",\"\",\"\",\"\",\"//260be02d26072f8c794ac04203b998de.cdn.bubble.io/f1720631046675x204421075440900380/Foto.jpg\",\"\",\"Ana Flávia\",\"\",\"não\",\"\",\"\",\"\",\"Vendedor\",\"\",\"May 6, 2022 11:31 am\",\"Jul 10, 2024 2:04 pm\",\"\",\"anaflavia@wassis.com.br\",\"\",\"1651847512287x967034720416115800\"\n\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"//260be02d26072f8c794ac04203b998de.cdn.bubble.io/f1720631021978x796129439327380700/384821711_664804072468651_8095212226983498069_n.jpg\",\"\",\"Juliana\",\"\",\"não\",\"\",\"\",\"\",\"Vendedor\",\"Cremonesi\",\"May 6, 2022 11:32 am\",\"Jul 10, 2024 2:03 pm\",\"\",\"juliana.cremonesi@wassis.com.br\",\"\",\"1651847554531x623336657062634900\"\n\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"//s3.amazonaws.com/appforest_uf/f1658753433798x610015103298824600/Hicila.jpg\",\"\",\"Hicila\",\"\",\"sim\",\"\",\"\",\"\",\"Vendedor\",\"\",\"Jul 25, 2022 9:51 am\",\"Jul 25, 2022 9:51 am\",\"\",\"hicila.fernandes@wassis.com.br\",\"\",\"1658753463558x597822814731593300\"\n\"\",\"Produtor\",\"\",\"\",\"\",\"\",\"\",\"\",\"//s3.amazonaws.com/appforest_uf/f1665000865360x785630995029376300/isabella.png\",\"\",\"Isabella\",\"\",\"\",\"\",\"\",\"\",\"Vendedor\",\"Riva\",\"Oct 5, 2022 5:14 pm\",\"Jan 7, 2023 10:51 am\",\"\",\"isabella@wassis.com.br\",\"\",\"1665000868626x744670643298209800\"\n\"\",\"Produtor\",\"\",\"\",\"\",\"\",\"\",\"\",\"//260be02d26072f8c794ac04203b998de.cdn.bubble.io/f1711040205962x791741327093987100/katiuscia.jpg\",\"\",\"Katiuscia\",\"\",\"\",\"\",\"\",\"\",\"Vendedor\",\"Toquato\",\"Mar 12, 2024 12:36 pm\",\"Mar 21, 2024 1:56 pm\",\"\",\"katiuscia@wassis.com.br\",\"\",\"1710257781847x879814679554580300\"\n\"\",\"Produtor\",\"\",\"\",\"\",\"\",\"\",\"\",\"//260be02d26072f8c794ac04203b998de.cdn.bubble.io/f1720701130159x767815566803290900/Foto.jpg\",\"\",\"Antonia\",\"Lopes\",\"sim\",\"\",\"\",\"\",\"Vendedor\",\"\",\"Jul 11, 2024 9:32 am\",\"Aug 24, 2024 1:51 pm\",\"\",\"antonia@wassis.com.br\",\"\",\"1720701152950x524552927015759900\"\n\"sim\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"1770383615689x975109008957469200\",\"Vinicius Assis\",\"\",\"não\",\"\",\"\",\"Bronze\",\"Cliente\",\"\",\"Feb 6, 2026 10:12 am\",\"Feb 6, 2026 10:16 am\",\"\",\"vinicius.wassis@gmail.com\",\"\",\"1770383577028x591067916704202800\"\n\"sim\",\"\",\"\",\"\",\"1770468216993x290360588970229760\",\"\",\"\",\"\",\"\",\"\",\"Kaue Galvão\",\"\",\"não\",\"\",\"\",\"Bronze\",\"Indicador Parceiro\",\"\",\"Feb 7, 2026 9:36 am\",\"Feb 7, 2026 9:44 am\",\"\",\"kaue.ggp@gmail.com\",\"\",\"1770467815475x407490622731747650\"\n\"sim\",\"Produtor\",\"\",\"\",\"\",\"\",\"\",\"\",\"//260be02d26072f8c794ac04203b998de.cdn.bubble.io/f1770742196327x925153712029831200/Captura%20de%20tela%202026-02-10%20134924.png\",\"\",\"Magna\",\"Magna Martins\",\"sim\",\"\",\"\",\"\",\"Vendedor\",\"Martins\",\"Feb 10, 2026 1:38 pm\",\"Feb 10, 2026 1:50 pm\",\"\",\"magna@wassis.com.br\",\"\",\"1770741508239x216587363715476930\"`\n  }\n}];"
+      },
+      "position": [
+        400,
+        240
+      ],
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1
+    },
+    {
+      "id": "transform_simple_v11_v2",
+      "name": "TransformDataCSV",
+      "parameters": {
+        "jsCode": "const csv = $json.csv_raw;\nconst lines = csv.split('\\n');\nconst results = [];\n\nfor (let i = 1; i < lines.length; i++) {\n  if (!lines[i]) continue;\n  const currentLine = lines[i].split('\",\"');\n  const obj = {};\n  \n  obj.email = currentLine[21]?.replace(/\"/g, '') || '';\n  obj.nome_completo = currentLine[10]?.replace(/\"/g, '') || '';\n  obj.perfil = currentLine[1] || 'Vendedor';\n  obj.bubble_id = currentLine[23]?.replace(/\"/g, '') || '';\n  obj.avatar_url = (currentLine[8] && currentLine[8].length > 5) ? 'https:' + currentLine[8].replace(/\"/g, '') : '';\n  \n  if (obj.email) results.push({ json: obj });\n}\nreturn results;"
+      },
+      "position": [
+        600,
+        240
+      ],
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1
+    },
+    {
+      "credentials": {
+        "postgres": {
+          "id": "4hBCxfGMrrXEqEmj",
+          "name": "Supabase"
+        }
+      },
+      "id": "get_sup_simple_v11",
+      "name": "GetSupabaseCorretores",
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT id, nome_completo, bubble_id FROM public.corretores;"
+      },
+      "position": [
+        800,
+        240
+      ],
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6
+    },
+    {
+      "id": "upsert_logic_simple_v11",
+      "name": "PrepararUpsertSQL",
+      "parameters": {
+        "jsCode": "const bubbleItems = $(\"TransformDataCSV\").all();\nconst supabaseItems = $(\"GetSupabaseCorretores\").all();\n\nreturn bubbleItems.map(item => {\n  const d = item.json;\n  const match = supabaseItems.find(s => \n    (s.json.bubble_id && s.json.bubble_id === d.bubble_id) ||\n    (d.nome_completo === 'Renato' && s.json.nome_completo === 'Renato') ||\n    (d.nome_completo.includes('Vinicius') && s.json.nome_completo.includes('Vinicius'))\n  );\n  \n  if (match) {\n    return { json: { ...d, id: match.json.id, type: 'update' } };\n  } else {\n    return { json: { ...d, type: 'create' } };\n  }\n});"
+      },
+      "position": [
+        1000,
+        240
+      ],
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1
+    },
+    {
+      "id": "wait_simple_v11",
+      "name": "WaitToSplit",
+      "parameters": {
+        "jsCode": "return items;"
+      },
+      "position": [
+        1200,
+        240
+      ],
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1
+    },
+    {
+      "id": "switch_simple_v11",
+      "name": "CheckAcao",
+      "parameters": {
+        "dataType": "string",
+        "rules": {
+          "rules": [
+            {
+              "operation": "equal",
+              "value": "update"
+            },
+            {
+              "operation": "equal",
+              "value": "create"
+            }
+          ]
+        },
+        "value": "={{ $json.type }}"
+      },
+      "position": [
+        1400,
+        240
+      ],
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 1
+    },
+    {
+      "credentials": {
+        "postgres": {
+          "id": "4hBCxfGMrrXEqEmj",
+          "name": "Supabase"
+        }
+      },
+      "id": "up_post_simple_v11_v2",
+      "name": "UpdateExistentesPostgres",
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "={{ \"UPDATE public.corretores SET nome_completo = '\" + $json.nome_completo.replace(/'/g, \"''\") + \"', perfil = '\" + $json.perfil + \"', bubble_id = '\" + $json.bubble_id + \"', avatar_url = NULLIF('\" + $json.avatar_url + \"', '') WHERE id = '\" + $json.id + \"'::uuid;\" }}"
+      },
+      "position": [
+        1650,
+        150
+      ],
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6
+    },
+    {
+      "credentials": {
+        "postgres": {
+          "id": "4hBCxfGMrrXEqEmj",
+          "name": "Supabase"
+        }
+      },
+      "id": "ins_nov_simple_v11_v2_new",
+      "name": "InsertNovosPostgres",
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "={{ \"INSERT INTO public.corretores (id, nome_completo, perfil, bubble_id, avatar_url) VALUES (gen_random_uuid(), '\" + $json.nome_completo.replace(/'/g, \"''\") + \"', '\" + $json.perfil + \"', '\" + $json.bubble_id + \"', NULLIF('\" + $json.avatar_url + \"', ''));\" }}"
+      },
+      "position": [
+        1650,
+        350
+      ],
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1",
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all",
+    "saveManualExecutions": true,
+    "saveExecutionProgress": true,
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false,
+    "binaryMode": "separate"
+  },
+  "shared": [
+    {
+      "updatedAt": "2026-04-07T15:04:29.098Z",
+      "createdAt": "2026-04-07T15:04:29.098Z",
+      "role": "workflow:owner",
+      "workflowId": "VDALODVoZtLH9yin",
+      "projectId": "OI72yru3WBGIgT4P"
+    }
+  ],
+  "staticData": null,
+  "tags": [
+    {
+      "updatedAt": "2026-04-07T15:05:16.542Z",
+      "createdAt": "2026-04-07T15:05:16.542Z",
+      "id": "KFiavtGmQYoWaQjA",
+      "name": "Migração"
+    }
+  ],
+  "triggerCount": 1,
+  "updatedAt": "2026-04-07T18:51:27.488Z",
+  "versionId": "4405afff-4ae4-4414-a739-a0b11863893b"
+}
