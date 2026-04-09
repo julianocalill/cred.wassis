@@ -1,0 +1,464 @@
+{
+  "active": true,
+  "activeVersion": {
+    "updatedAt": "2026-04-06T23:48:16.003Z",
+    "createdAt": "2026-04-06T23:47:41.239Z",
+    "versionId": "f4301b2f-63c5-4beb-9cc6-ca23590ce814",
+    "workflowId": "pO8MlBtzzhgyoX8N",
+    "nodes": [
+      {
+        "parameters": {
+          "httpMethod": "POST",
+          "path": "salvar_mensagens",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.webhook",
+        "typeVersion": 2,
+        "position": [
+          -2192,
+          -16
+        ],
+        "id": "a68272d4-e167-4fb4-a1ba-9dbbdb52d355",
+        "name": "Mensagem Recebida",
+        "webhookId": "70f5ec7c-7146-4eef-abb7-b0bb7ee75ac1"
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "c8fd010d-6096-4a50-b3e2-e9fe26661840",
+                "name": "id_mensagem",
+                "value": "={{ $json.body.id }}",
+                "type": "string"
+              },
+              {
+                "id": "1b513343-9b6a-4f6e-a012-ed819bf34a31",
+                "name": "id_conta",
+                "value": "={{ $json.body.account.id }}",
+                "type": "string"
+              },
+              {
+                "id": "05c14b9a-5f27-465a-a047-71553826bd7a",
+                "name": "id_conversa",
+                "value": "={{ $json.body.conversation.id }}",
+                "type": "string"
+              },
+              {
+                "id": "8bf522a6-75fb-434a-854c-b736539309e1",
+                "name": "=telefone",
+                "value": "={{ $json.body.conversation.meta.sender.phone_number }}",
+                "type": "string"
+              },
+              {
+                "id": "0d622a33-f313-4758-a764-fa6cbf2b0587",
+                "name": "mensagem",
+                "value": "={{ $json.body.content || '' }}",
+                "type": "string"
+              },
+              {
+                "id": "2b679a3f-788f-4cd2-88d5-4f03af68f224",
+                "name": "timestamp",
+                "value": "={{ $json.body.created_at }}",
+                "type": "string"
+              },
+              {
+                "id": "24caf88e-74ce-43ab-8dc4-1fff471b706f",
+                "name": "tipo",
+                "value": "={{ $json.body.message_type }}",
+                "type": "string"
+              },
+              {
+                "id": "573669d2-1e43-4010-8c82-a67459ffe1db",
+                "name": "etiquetas",
+                "value": "={{ $json.body.conversation.labels }}",
+                "type": "array"
+              },
+              {
+                "id": "40ff895f-f63f-4e4f-bba3-c7d803c277f1",
+                "name": "url_chatwoot",
+                "value": "https://chat.wassis.com.br",
+                "type": "string"
+              },
+              {
+                "id": "01e59c0c-b46f-44cb-89a3-d028cc01b445",
+                "name": "nome",
+                "value": "={{ $json.body.sender.name }}",
+                "type": "string"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          -1968,
+          -16
+        ],
+        "id": "7eb369e4-09db-4fa1-a100-eef29ea9b978",
+        "name": "Info"
+      },
+      {
+        "parameters": {
+          "schema": {
+            "__rl": true,
+            "value": "public",
+            "mode": "list",
+            "cachedResultName": "public"
+          },
+          "table": {
+            "__rl": true,
+            "value": "historico_whatsapp",
+            "mode": "list",
+            "cachedResultName": "historico_whatsapp"
+          },
+          "columns": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "session_id": "={{ $json.telefone }}",
+              "message": "={{ { \"type\": $json.tipo, \"content\": $json.mensagem } }}",
+              "nome": "={{ $json.nome }}",
+              "created_at": "={{ $json.timestamp }}"
+            },
+            "matchingColumns": [
+              "id"
+            ],
+            "schema": [
+              {
+                "id": "session_id",
+                "displayName": "session_id",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "message",
+                "displayName": "message",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "object",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "created_at",
+                "displayName": "created_at",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "dateTime",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "nome",
+                "displayName": "nome",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "id",
+                "displayName": "id",
+                "required": false,
+                "defaultMatch": true,
+                "display": true,
+                "type": "number",
+                "canBeUsedToMatch": true,
+                "removed": true
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": false
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.postgres",
+        "typeVersion": 2.6,
+        "position": [
+          -1728,
+          -16
+        ],
+        "id": "8e8faba9-8b00-4b0a-af78-718f7a7892ce",
+        "name": "Insert rows in a table",
+        "credentials": {
+          "postgres": {
+            "id": "4hBCxfGMrrXEqEmj",
+            "name": "Supabase"
+          }
+        }
+      }
+    ],
+    "connections": {
+      "Mensagem Recebida": {
+        "main": [
+          [
+            {
+              "node": "Info",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Info": {
+        "main": [
+          [
+            {
+              "node": "Insert rows in a table",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "authors": "Renato Martin de Assis",
+    "name": "Version f4301b2f",
+    "description": "",
+    "autosaved": true
+  },
+  "activeVersionId": "f4301b2f-63c5-4beb-9cc6-ca23590ce814",
+  "connections": {
+    "Mensagem Recebida": {
+      "main": [
+        [
+          {
+            "node": "Info",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Info": {
+      "main": [
+        [
+          {
+            "node": "Insert rows in a table",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2026-04-06T23:05:12.704Z",
+  "id": "pO8MlBtzzhgyoX8N",
+  "isArchived": false,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "Histórico WPP",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "salvar_mensagens",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -2192,
+        -16
+      ],
+      "id": "a68272d4-e167-4fb4-a1ba-9dbbdb52d355",
+      "name": "Mensagem Recebida",
+      "webhookId": "70f5ec7c-7146-4eef-abb7-b0bb7ee75ac1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c8fd010d-6096-4a50-b3e2-e9fe26661840",
+              "name": "id_mensagem",
+              "value": "={{ $json.body.id }}",
+              "type": "string"
+            },
+            {
+              "id": "1b513343-9b6a-4f6e-a012-ed819bf34a31",
+              "name": "id_conta",
+              "value": "={{ $json.body.account.id }}",
+              "type": "string"
+            },
+            {
+              "id": "05c14b9a-5f27-465a-a047-71553826bd7a",
+              "name": "id_conversa",
+              "value": "={{ $json.body.conversation.id }}",
+              "type": "string"
+            },
+            {
+              "id": "8bf522a6-75fb-434a-854c-b736539309e1",
+              "name": "=telefone",
+              "value": "={{ $json.body.conversation.meta.sender.phone_number }}",
+              "type": "string"
+            },
+            {
+              "id": "0d622a33-f313-4758-a764-fa6cbf2b0587",
+              "name": "mensagem",
+              "value": "={{ $json.body.content || '' }}",
+              "type": "string"
+            },
+            {
+              "id": "2b679a3f-788f-4cd2-88d5-4f03af68f224",
+              "name": "timestamp",
+              "value": "={{ $json.body.created_at }}",
+              "type": "string"
+            },
+            {
+              "id": "24caf88e-74ce-43ab-8dc4-1fff471b706f",
+              "name": "tipo",
+              "value": "={{ $json.body.message_type }}",
+              "type": "string"
+            },
+            {
+              "id": "573669d2-1e43-4010-8c82-a67459ffe1db",
+              "name": "etiquetas",
+              "value": "={{ $json.body.conversation.labels }}",
+              "type": "array"
+            },
+            {
+              "id": "40ff895f-f63f-4e4f-bba3-c7d803c277f1",
+              "name": "url_chatwoot",
+              "value": "https://chat.wassis.com.br",
+              "type": "string"
+            },
+            {
+              "id": "01e59c0c-b46f-44cb-89a3-d028cc01b445",
+              "name": "nome",
+              "value": "={{ $json.body.sender.name }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1968,
+        -16
+      ],
+      "id": "7eb369e4-09db-4fa1-a100-eef29ea9b978",
+      "name": "Info"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "value": "public",
+          "mode": "list",
+          "cachedResultName": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "historico_whatsapp",
+          "mode": "list",
+          "cachedResultName": "historico_whatsapp"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "session_id": "={{ $json.telefone }}",
+            "message": "={{ { \"type\": $json.tipo, \"content\": $json.mensagem } }}",
+            "nome": "={{ $json.nome }}",
+            "created_at": "={{ $json.timestamp }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "session_id",
+              "displayName": "session_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "message",
+              "displayName": "message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "object",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "nome",
+              "displayName": "nome",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -1728,
+        -16
+      ],
+      "id": "8e8faba9-8b00-4b0a-af78-718f7a7892ce",
+      "name": "Insert rows in a table",
+      "credentials": {
+        "postgres": {
+          "id": "4hBCxfGMrrXEqEmj",
+          "name": "Supabase"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "shared": [
+    {
+      "updatedAt": "2026-04-06T23:05:12.704Z",
+      "createdAt": "2026-04-06T23:05:12.704Z",
+      "role": "workflow:owner",
+      "workflowId": "pO8MlBtzzhgyoX8N",
+      "projectId": "OI72yru3WBGIgT4P"
+    }
+  ],
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 1,
+  "updatedAt": "2026-04-06T23:47:41.238Z",
+  "versionId": "f4301b2f-63c5-4beb-9cc6-ca23590ce814"
+}
