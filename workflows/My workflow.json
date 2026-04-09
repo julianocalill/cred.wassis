@@ -1,0 +1,276 @@
+{
+  "active": false,
+  "activeVersion": null,
+  "activeVersionId": null,
+  "connections": {
+    "CSV_Data_Injected": {
+      "main": [
+        [
+          {
+            "node": "TransformDataCSV",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "TransformDataCSV": {
+      "main": [
+        [
+          {
+            "node": "GetSupabaseCorretores",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GetSupabaseCorretores": {
+      "main": [
+        [
+          {
+            "node": "PrepararUpsertSQL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PrepararUpsertSQL": {
+      "main": [
+        [
+          {
+            "node": "WaitToSplit",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "WaitToSplit": {
+      "main": [
+        [
+          {
+            "node": "UpdateExistentesPostgres",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CheckAcao": {
+      "main": [
+        [],
+        []
+      ]
+    },
+    "CrearAuthSupabase": {
+      "main": [
+        [
+          {
+            "node": "InsertNovosPostgres",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "CSV_Data_Injected",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2026-04-07T18:51:13.722Z",
+  "id": "Ij5JJJeTcqYQXIxJ",
+  "isArchived": true,
+  "meta": null,
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "jsCode": "return [{\n  json: {\n    csv_raw: `\"active\",\"Cargo\",\"chave_pix\",\"Cliente\",\"company\",\"CPF/CNPJ\",\"delete\",\"Empresa\",\"foto\",\"link\",\"Nome\",\"Nome_sobrenome\",\"Onboarding\",\"reward_balance\",\"reward_total\",\"reward_type\",\"role\",\"Sobrenome\",\"Creation Date\",\"Modified Date\",\"Slug\",\"email\",\"null\",\"unique id\"\n\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"//260be02d26072f8c794ac04203b998de.cdn.bubble.io/f1720631137330x682148151832612200/olkjq87lylcxwjwgp94xry3fpesb.jpg\",\"\",\"Renato\",\"\",\"não\",\"\",\"\",\"\",\"Administrador\",\"\",\"Apr 6, 2022 5:26 pm\",\"Feb 7, 2026 9:46 am\",\"\",\"renato@wassis.com.br\",\"\",\"1649276796087x419883886772405950\"\n\"\",\"Gerente\",\"\",\"\",\"\",\"\",\"\",\"\",\"//260be02d26072f8c794ac04203b998de.cdn.bubble.io/f1720701211948x117633240900773870/Captura%20de%20tela%202024-07-11%20093309.png\",\"\",\"Vinicius\",\"\",\"não\",\"\",\"\",\"\",\"Vendedor\",\"\",\"Apr 28, 2022 2:19 pm\",\"Apr 6, 2026 12:05 pm\",\"\",\"vinicius@wassis.com.br\",\"\",\"1651166372135x377880313405403650\"\n\"\",\"Gerente\",\"\",\"\",\"\",\"\",\"\",\"\",\"//260be02d26072f8c794ac04203b998de.cdn.bubble.io/f1721143971119x886363899729679000/Captura%20de%20tela%202024-07-16%20123153.png\",\"\",\"Gustavo\",\"\",\"não\",\"\",\"\",\"\",\"Vendedor\",\"Assis\",\"Apr 28, 2022 8:35 pm\",\"Jul 16, 2024 12:32 pm\",\"\",\"gustavo@wassis.com.br\",\"\",\"1651188948706x743418539099612800\"\n\"\",\"Gerente\",\"\",\"\",\"\",\"\",\"\",\"\",\"//260be02d26072f8c794ac04203b998de.cdn.bubble.io/f1721144055400x960887613395599900/Captura%20de%20tela%202024-07-16%20123352.png\",\"\",\"Meire\",\"\",\"não\",\"\",\"\",\"\",\"Vendedor\",\"\",\"May 6, 2022 11:31 am\",\"Jul 16, 2024 12:34 pm\",\"\",\"meire@wassis.com.br\",\"\",\"1651847461342x810657075292172700\"\n\"\",\"Produtor\",\"\",\"\",\"\",\"\",\"\",\"\",\"//260be02d26072f8c794ac04203b998de.cdn.bubble.io/f1720631046675x204421075440900380/Foto.jpg\",\"\",\"Ana Flávia\",\"\",\"não\",\"\",\"\",\"\",\"Vendedor\",\"\",\"May 6, 2022 11:31 am\",\"Jul 10, 2024 2:04 pm\",\"\",\"anaflavia@wassis.com.br\",\"\",\"1651847512287x967034720416115800\"\n\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"//260be02d26072f8c794ac04203b998de.cdn.bubble.io/f1720631021978x796129439327380700/384821711_664804072468651_8095212226983498069_n.jpg\",\"\",\"Juliana\",\"\",\"não\",\"\",\"\",\"\",\"Vendedor\",\"Cremonesi\",\"May 6, 2022 11:32 am\",\"Jul 10, 2024 2:03 pm\",\"\",\"juliana.cremonesi@wassis.com.br\",\"\",\"1651847554531x623336657062634900\"\n\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"//s3.amazonaws.com/appforest_uf/f1658753433798x610015103298824600/Hicila.jpg\",\"\",\"Hicila\",\"\",\"sim\",\"\",\"\",\"\",\"Vendedor\",\"\",\"Jul 25, 2022 9:51 am\",\"Jul 25, 2022 9:51 am\",\"\",\"hicila.fernandes@wassis.com.br\",\"\",\"1658753463558x597822814731593300\"\n\"\",\"Produtor\",\"\",\"\",\"\",\"\",\"\",\"\",\"//s3.amazonaws.com/appforest_uf/f1665000865360x785630995029376300/isabella.png\",\"\",\"Isabella\",\"\",\"\",\"\",\"\",\"\",\"Vendedor\",\"Riva\",\"Oct 5, 2022 5:14 pm\",\"Jan 7, 2023 10:51 am\",\"\",\"isabella@wassis.com.br\",\"\",\"1665000868626x744670643298209800\"\n\"\",\"Produtor\",\"\",\"\",\"\",\"\",\"\",\"\",\"//260be02d26072f8c794ac04203b998de.cdn.bubble.io/f1711040205962x791741327093987100/katiuscia.jpg\",\"\",\"Katiuscia\",\"\",\"\",\"\",\"\",\"\",\"Vendedor\",\"Toquato\",\"Mar 12, 2024 12:36 pm\",\"Mar 21, 2024 1:56 pm\",\"\",\"katiuscia@wassis.com.br\",\"\",\"1710257781847x879814679554580300\"\n\"\",\"Produtor\",\"\",\"\",\"\",\"\",\"\",\"\",\"//260be02d26072f8c794ac04203b998de.cdn.bubble.io/f1720701130159x767815566803290900/Foto.jpg\",\"\",\"Antonia\",\"Lopes\",\"sim\",\"\",\"\",\"\",\"Vendedor\",\"\",\"Jul 11, 2024 9:32 am\",\"Aug 24, 2024 1:51 pm\",\"\",\"antonia@wassis.com.br\",\"\",\"1720701152950x524552927015759900\"\n\"sim\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"1770383615689x975109008957469200\",\"Vinicius Assis\",\"\",\"não\",\"\",\"\",\"Bronze\",\"Cliente\",\"\",\"Feb 6, 2026 10:12 am\",\"Feb 6, 2026 10:16 am\",\"\",\"vinicius.wassis@gmail.com\",\"\",\"1770383577028x591067916704202800\"\n\"sim\",\"\",\"\",\"\",\"1770468216993x290360588970229760\",\"\",\"\",\"\",\"\",\"\",\"Kaue Galvão\",\"\",\"não\",\"\",\"\",\"Bronze\",\"Indicador Parceiro\",\"\",\"Feb 7, 2026 9:36 am\",\"Feb 7, 2026 9:44 am\",\"\",\"kaue.ggp@gmail.com\",\"\",\"1770467815475x407490622731747650\"\n\"sim\",\"Produtor\",\"\",\"\",\"\",\"\",\"\",\"\",\"//260be02d26072f8c794ac04203b998de.cdn.bubble.io/f1770742196327x925153712029831200/Captura%20de%20tela%202026-02-10%20134924.png\",\"\",\"Magna\",\"Magna Martins\",\"sim\",\"\",\"\",\"\",\"Vendedor\",\"Martins\",\"Feb 10, 2026 1:38 pm\",\"Feb 10, 2026 1:50 pm\",\"\",\"magna@wassis.com.br\",\"\",\"1770741508239x216587363715476930\"`\n  }\n}];"
+      },
+      "id": "3665f204-279d-4a6c-b3d2-7cb56d3246fe",
+      "name": "CSV_Data_Injected",
+      "position": [
+        -1264,
+        80
+      ],
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "jsCode": "const csv = $json.csv_raw;\nconst lines = csv.split('\\n');\nconst results = [];\n\nfor (let i = 1; i < lines.length; i++) {\n  if (!lines[i]) continue;\n  const currentLine = lines[i].split('\",\"');\n  const obj = {};\n  \n  obj.email = currentLine[21]?.replace(/\"/g, '') || '';\n  obj.nome_completo = currentLine[10]?.replace(/\"/g, '') || '';\n  obj.perfil = currentLine[1] || 'Vendedor';\n  obj.bubble_id = currentLine[23]?.replace(/\"/g, '') || '';\n  obj.avatar_url = (currentLine[8] && currentLine[8].length > 5) ? 'https:' + currentLine[8].replace(/\"/g, '') : '';\n  \n  if (obj.email) results.push({ json: obj });\n}\nreturn results;"
+      },
+      "id": "5ae66b1b-b33a-47b5-82e6-c12297c7e028",
+      "name": "TransformDataCSV",
+      "position": [
+        -1056,
+        80
+      ],
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT id, nome_completo, bubble_id FROM public.corretores;",
+        "options": {}
+      },
+      "id": "30238c07-1bd0-4ee7-aa9d-c17c57e0c9d5",
+      "name": "GetSupabaseCorretores",
+      "position": [
+        -864,
+        80
+      ],
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "credentials": {
+        "postgres": {
+          "id": "4hBCxfGMrrXEqEmj",
+          "name": "Supabase"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const bubbleItems = $(\"TransformDataCSV\").all();\nconst supabaseItems = $(\"GetSupabaseCorretores\").all();\n\nreturn bubbleItems.map(item => {\n  const d = item.json;\n  const match = supabaseItems.find(s => \n    (s.json.bubble_id && s.json.bubble_id === d.bubble_id) ||\n    (d.nome_completo === 'Renato' && s.json.nome_completo === 'Renato')\n  );\n  \n  if (match) {\n    return { json: { ...d, id: match.json.id, type: 'update' } };\n  } else {\n    return { json: { ...d, type: 'create' } };\n  }\n});"
+      },
+      "id": "d6b4600a-f69c-470b-a692-8f9a1862a163",
+      "name": "PrepararUpsertSQL",
+      "position": [
+        -656,
+        80
+      ],
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "jsCode": "if ($json.type === 'create') {\n  $json.password = 'Wassis@' + Math.floor(1000 + Math.random() * 9000);\n}\nreturn items;"
+      },
+      "id": "74326e79-3114-430f-bbdc-92b6fe371164",
+      "name": "WaitToSplit",
+      "position": [
+        -464,
+        80
+      ],
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "dataType": "string",
+        "rules": {
+          "rules": [
+            {},
+            {}
+          ]
+        }
+      },
+      "id": "83e5f763-339f-430b-9803-ab833026b410",
+      "name": "CheckAcao",
+      "position": [
+        -224,
+        -288
+      ],
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "{{ \"UPDATE public.corretores SET nome_completo = '\" + $json.nome_completo.replace(/'/g, \"''\") + \"', perfil = '\" + $json.perfil + \"', bubble_id = '\" + $json.bubble_id + \"', avatar_url = NULLIF('\" + $json.avatar_url + \"', '') WHERE id = '\" + $json.id + \"'::uuid;\" }}",
+        "options": {}
+      },
+      "id": "ede25424-5a14-401f-95ed-3e471727fcbc",
+      "name": "UpdateExistentesPostgres",
+      "position": [
+        0,
+        0
+      ],
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "credentials": {
+        "postgres": {
+          "id": "4hBCxfGMrrXEqEmj",
+          "name": "Supabase"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "https://hdpohfythurgbnzhygvl.supabase.co/auth/v1/admin/users",
+        "authentication": "genericHeaderAuth",
+        "options": {}
+      },
+      "id": "12f6b664-c346-4c6d-a19d-728de7c585e4",
+      "name": "CrearAuthSupabase",
+      "position": [
+        0,
+        192
+      ],
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "{{ \"INSERT INTO public.corretores (id, nome_completo, perfil, bubble_id, avatar_url) VALUES ('\" + $node[\"CrearAuthSupabase\"].json.id + \"'::uuid, '\" + $node[\"WaitToSplit\"].json.nome_completo.replace(/'/g, \"''\") + \"', '\" + $node[\"WaitToSplit\"].json.perfil + \"', '\" + $node[\"WaitToSplit\"].json.bubble_id + \"', NULLIF('\" + $node[\"WaitToSplit\"].json.avatar_url + \"', ''));\" }}",
+        "options": {}
+      },
+      "id": "ddc9ba58-6709-49c6-b569-496ef6231693",
+      "name": "InsertNovosPostgres",
+      "position": [
+        192,
+        192
+      ],
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "credentials": {
+        "postgres": {
+          "id": "4hBCxfGMrrXEqEmj",
+          "name": "Supabase"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -1520,
+        96
+      ],
+      "id": "a13d1fd9-5c71-46ee-a90d-6806edae1f72",
+      "name": "When clicking ‘Execute workflow’"
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "shared": [
+    {
+      "updatedAt": "2026-04-07T18:51:13.722Z",
+      "createdAt": "2026-04-07T18:51:13.722Z",
+      "role": "workflow:owner",
+      "workflowId": "Ij5JJJeTcqYQXIxJ",
+      "projectId": "OI72yru3WBGIgT4P"
+    }
+  ],
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2026-04-07T18:52:29.755Z",
+  "versionId": "a44ce172-932a-44f0-a7ac-37d1cf070061"
+}
