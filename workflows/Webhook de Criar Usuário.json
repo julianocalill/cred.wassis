@@ -1,0 +1,269 @@
+{
+  "active": true,
+  "activeVersion": {
+    "updatedAt": "2026-03-26T00:14:05.652Z",
+    "createdAt": "2026-03-26T00:12:01.630Z",
+    "versionId": "197effc8-427c-439a-b39f-ad26227de0ea",
+    "workflowId": "bgFJt8LEnlOob0v9",
+    "nodes": [
+      {
+        "parameters": {
+          "httpMethod": "POST",
+          "path": "criar-usuario",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.webhook",
+        "typeVersion": 2.1,
+        "position": [
+          0,
+          0
+        ],
+        "id": "87336274-413b-4f05-801b-6715078f9fcd",
+        "name": "Webhook",
+        "webhookId": "826781ca-739d-4b67-bea2-92eddc8c9238"
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "https://hdpohfythurgbnzhygvl.supabase.co/auth/v1/admin/users",
+          "sendHeaders": true,
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "apikey",
+                "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhkcG9oZnl0aHVyZ2Juemh5Z3ZsIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NDI4Mjg1MiwiZXhwIjoyMDg5ODU4ODUyfQ.aMnjXL4zl7HW8YdkgGhUuU4485z0NyipB15dqqJvCB4"
+              },
+              {
+                "name": "Authorization",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhkcG9oZnl0aHVyZ2Juemh5Z3ZsIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NDI4Mjg1MiwiZXhwIjoyMDg5ODU4ODUyfQ.aMnjXL4zl7HW8YdkgGhUuU4485z0NyipB15dqqJvCB4"
+              }
+            ]
+          },
+          "sendBody": true,
+          "specifyBody": "json",
+          "jsonBody": "={\n  \"email\": \"{{$json.body.email}}\",\n  \"password\": \"{{$json.body.senha}}\",\n  \"email_confirm\": true,\n  \"user_metadata\": {\n    \"name\": \"{{$json.body.nome}}\"\n  }\n}",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.4,
+        "position": [
+          208,
+          0
+        ],
+        "id": "9fe314ad-4e67-4f9b-b627-301b8ca3381d",
+        "name": "HTTP Request"
+      },
+      {
+        "parameters": {
+          "method": "PATCH",
+          "url": "=https://hdpohfythurgbnzhygvl.supabase.co/rest/v1/corretores?id=eq.{{$json.id}}",
+          "sendHeaders": true,
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "apikey",
+                "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhkcG9oZnl0aHVyZ2Juemh5Z3ZsIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NDI4Mjg1MiwiZXhwIjoyMDg5ODU4ODUyfQ.aMnjXL4zl7HW8YdkgGhUuU4485z0NyipB15dqqJvCB4"
+              },
+              {
+                "name": "Authorization",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhkcG9oZnl0aHVyZ2Juemh5Z3ZsIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NDI4Mjg1MiwiZXhwIjoyMDg5ODU4ODUyfQ.aMnjXL4zl7HW8YdkgGhUuU4485z0NyipB15dqqJvCB4"
+              },
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "name": "Prefer",
+                "value": "return=minimal"
+              }
+            ]
+          },
+          "sendBody": true,
+          "specifyBody": "json",
+          "jsonBody": "={\n  \"nome_completo\": \"{{ $('Webhook').item.json.body.nome }}\",\n  \"perfil\": \"{{ $('Webhook').item.json.body.perfil }}\"\n}",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.4,
+        "position": [
+          416,
+          0
+        ],
+        "id": "0f5c7622-f97b-41e8-8bb9-dda97d5cb23e",
+        "name": "HTTP Request1"
+      }
+    ],
+    "connections": {
+      "Webhook": {
+        "main": [
+          [
+            {
+              "node": "HTTP Request",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "HTTP Request": {
+        "main": [
+          [
+            {
+              "node": "HTTP Request1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "authors": "Renato Martin de Assis",
+    "name": "Version 197effc8",
+    "description": "",
+    "autosaved": true
+  },
+  "activeVersionId": "197effc8-427c-439a-b39f-ad26227de0ea",
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2026-03-25T23:58:42.704Z",
+  "id": "bgFJt8LEnlOob0v9",
+  "isArchived": false,
+  "meta": null,
+  "name": "Webhook de Criar Usuário",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "criar-usuario",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "87336274-413b-4f05-801b-6715078f9fcd",
+      "name": "Webhook",
+      "webhookId": "826781ca-739d-4b67-bea2-92eddc8c9238"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://hdpohfythurgbnzhygvl.supabase.co/auth/v1/admin/users",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhkcG9oZnl0aHVyZ2Juemh5Z3ZsIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NDI4Mjg1MiwiZXhwIjoyMDg5ODU4ODUyfQ.aMnjXL4zl7HW8YdkgGhUuU4485z0NyipB15dqqJvCB4"
+            },
+            {
+              "name": "Authorization",
+              "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhkcG9oZnl0aHVyZ2Juemh5Z3ZsIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NDI4Mjg1MiwiZXhwIjoyMDg5ODU4ODUyfQ.aMnjXL4zl7HW8YdkgGhUuU4485z0NyipB15dqqJvCB4"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"email\": \"{{$json.body.email}}\",\n  \"password\": \"{{$json.body.senha}}\",\n  \"email_confirm\": true,\n  \"user_metadata\": {\n    \"name\": \"{{$json.body.nome}}\"\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        208,
+        0
+      ],
+      "id": "9fe314ad-4e67-4f9b-b627-301b8ca3381d",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "method": "PATCH",
+        "url": "=https://hdpohfythurgbnzhygvl.supabase.co/rest/v1/corretores?id=eq.{{$json.id}}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhkcG9oZnl0aHVyZ2Juemh5Z3ZsIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NDI4Mjg1MiwiZXhwIjoyMDg5ODU4ODUyfQ.aMnjXL4zl7HW8YdkgGhUuU4485z0NyipB15dqqJvCB4"
+            },
+            {
+              "name": "Authorization",
+              "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhkcG9oZnl0aHVyZ2Juemh5Z3ZsIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NDI4Mjg1MiwiZXhwIjoyMDg5ODU4ODUyfQ.aMnjXL4zl7HW8YdkgGhUuU4485z0NyipB15dqqJvCB4"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Prefer",
+              "value": "return=minimal"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"nome_completo\": \"{{ $('Webhook').item.json.body.nome }}\",\n  \"perfil\": \"{{ $('Webhook').item.json.body.perfil }}\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        416,
+        0
+      ],
+      "id": "0f5c7622-f97b-41e8-8bb9-dda97d5cb23e",
+      "name": "HTTP Request1"
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "shared": [
+    {
+      "updatedAt": "2026-03-25T23:58:42.704Z",
+      "createdAt": "2026-03-25T23:58:42.704Z",
+      "role": "workflow:owner",
+      "workflowId": "bgFJt8LEnlOob0v9",
+      "projectId": "OI72yru3WBGIgT4P"
+    }
+  ],
+  "staticData": null,
+  "tags": [
+    {
+      "updatedAt": "2026-04-07T15:05:33.362Z",
+      "createdAt": "2026-04-07T15:05:33.362Z",
+      "id": "p7e2B7Q0fOAmJZCy",
+      "name": "CRM"
+    }
+  ],
+  "triggerCount": 1,
+  "updatedAt": "2026-04-07T15:06:04.959Z",
+  "versionId": "197effc8-427c-439a-b39f-ad26227de0ea"
+}
