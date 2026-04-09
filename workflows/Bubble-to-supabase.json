@@ -1,0 +1,33 @@
+{
+  "active": false,
+  "activeVersion": null,
+  "activeVersionId": null,
+  "connections": {},
+  "createdAt": "2026-04-07T13:39:54.751Z",
+  "id": "0AbEqu6Wgid8ZhcU",
+  "isArchived": true,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "Bubble-to-supabase",
+  "nodes": [],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "shared": [
+    {
+      "updatedAt": "2026-04-07T13:39:54.751Z",
+      "createdAt": "2026-04-07T13:39:54.751Z",
+      "role": "workflow:owner",
+      "workflowId": "0AbEqu6Wgid8ZhcU",
+      "projectId": "OI72yru3WBGIgT4P"
+    }
+  ],
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2026-04-07T15:05:05.116Z",
+  "versionId": "beb084b2-a854-4613-a7c2-7a30a536ee75"
+}
